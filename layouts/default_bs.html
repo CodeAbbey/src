@@ -1,0 +1,74 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <title><?= $ctx->miscService->formatTitle() ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="<?= aurl('img/icon.png') ?>"/>
+
+    <?php if (isset($ctx->elems->locales)) : ?>
+        <?php foreach ($ctx->elems->locales as $localeCode => $localeUrl) : ?>
+        <link rel="alternate" hreflang="<?= $localeCode ?>" href="<?= $localeUrl ?>"/>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php $ctx->util->fragment('metas'); ?>
+    <?php
+        array_splice($ctx->elems->styles, 0, 0, ['bs_cm.php']);
+        array_splice($ctx->elems->scripts, 0, 0, ['jq_bs_cm.php']);
+    ?>
+
+    <?php $ctx->util->fragment('cssandjs'); ?>
+</head>
+<body>
+
+<nav class="header navbar navbar-fixed-top">
+    <div class="container">
+        <?php $ctx->util->fragment('menu-bs'); ?>
+    </div>
+</nav>
+
+<div class="container">
+<?= $ctx->util->fragment('flash'); ?>
+
+<?php
+$msgPersonal = $ctx->msgService->getMessagePersonal();
+if (!empty($msgPersonal)) : ?>
+<div class="message-personal" data-rem="<?= url('tools_msg') ?>" title="Click to remove">
+    <?= $msgPersonal ?><br/><span class="hint">(click to remove)</span>
+</div>
+<?php endif; ?>
+
+<?= $ctx->elems->get('contentResult', '<div>No content</div>') ?>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <?php $ctx->util->fragment('footer'); ?>
+    </div>
+</div>
+
+<?php
+if (sizeof($ctx->elems->errors) > 0) {
+    echo '<div class="errors">' . join("\n<br/>\n", $ctx->elems->errors) . '</div>';
+}
+?>
+
+<?php if (!empty($ctx->elems->analytics) && $ctx->elems->analytics && !$ctx->auth->admin()) : ?>
+<?php if (empty($ctx->elems->conf->debug)) : ?>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5GJYN2K3JV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5GJYN2K3JV');
+</script>
+<?php else : ?>
+<!-- analytics script here -->
+<?php endif; ?>
+<?php endif; ?>
+</body>
+</html>
+

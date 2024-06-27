@@ -1,0 +1,22 @@
+<div class="centered">
+    <br/>
+    <?php if (!$model->logged) : ?>
+        <div>
+            <div class="row text-center">
+                <a class="strong" href="<?= $ctx->util->fullUrl('login', 'https://') ?>">
+                    Login (register) with Username and Password
+                </a>
+            </div>
+            or else<br/>
+            <a href="<?= $ctx->loginService->githubLoginUrl() ?>">
+                <img src="<?= aurl('img/logingh.png') ?>" alt="Login with GitHub"/>
+            </a>
+            <a href="<?= $ctx->loginService->googleLoginUrl() ?>">
+                <img src="<?= aurl('img/logingg.png') ?>" alt="Login with Google"/>
+            </a>
+        </div>
+    <?php else : ?>
+        <h3>Hello, <?= $ctx->auth->username() ?>!</h3>
+    <?php endif; ?>
+    <br/>
+</div>

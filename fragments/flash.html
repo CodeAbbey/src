@@ -1,0 +1,13 @@
+<?php
+$_flash = $ctx->util->flash();
+if ($_flash !== null) :
+?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="flash-wrap">
+            <div class="flash-msg"><?= $_flash ?></div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+

@@ -1,0 +1,23 @@
+<div class="centered">
+    <!--
+    <img src="some_imgur_image" width="100%">
+    <br/>
+    <span class="hint">description</span>
+    <br/><br/>
+    -->
+    <div class="strong">Top Brethren and Sistren of the Week</div>
+    <a href="<?= url('user_ranking') ?>">(see best of all times)</a><br/>
+    <table class="table table-striped table-condensed table-bordered full-width">
+        <thead>
+            <tr class="centered">
+                <th>User</th>
+                <th title="Level">Rank</th>
+                <th title="Solved during last 7 days">Solved</th>
+            </tr>
+        </thead>
+        <tbody id="table-week-top">
+        </tbody>
+    </table>
+    <script>$(function() {$('#table-week-top').load('<?=url('api_weekbest')?>')})</script>
+</div>
+

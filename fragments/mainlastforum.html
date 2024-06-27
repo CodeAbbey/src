@@ -1,0 +1,20 @@
+<div class="centered container">
+    <div class="row strong">
+        <span class="col-xs-7">Recent at
+            <a href="<?= url('forum_main') ?>">Forums:</a>
+        </span>
+    </div>
+    <?php foreach ($model->lastForum as $topic) : ?>
+        <div class="row text-left">
+            <a href="<?= url('forum_topic', 'param', $topic->url) . '#lastPost' ?>"><?= $topic->title ?></a>
+        </div>
+        <div class="row text-left">
+            <span class="col-xs-offset-2">from <?= $topic->user->username ?></span>, &nbsp;
+            <span>last <?= $topic->lastUser->username ?></span>
+        </div>
+        <div class="row text-left">
+            <span class="col-xs-offset-4 hint">last at <?= $topic->lastpost ?></span>
+        </div>
+    <?php endforeach; ?>
+</div>
+

@@ -1,0 +1,31 @@
+<?php
+
+$cssRandomKey = $ctx->util->sessionGet('css-random-key');
+if ($cssRandomKey === null) {
+    $cssRandomKey = rand();
+    $ctx->util->sessionPut('css-random-key', $cssRandomKey);
+}
+
+foreach ($ctx->elems->styles as $name) {
+    if (strpos($name, '.') === false) $name .= ".css";
+    $file = "css/$name";
+    $tag = '<link rel="stylesheet" href="' . aurl($file) . "?r=$cssRandomKey\"/>";
+    if (!file_exists($file)) {
+        $tag = "<!--missing: $tag -->";
+    }
+    echo "$tag\n";
+}
+
+echo '<script>var tools = "' . url('tools') . '";</script>';
+
+foreach ($ctx->elems->scripts as $name) {
+    if (strpos($name, '.') === false) $name .= ".js";
+    $file = "js/$name";
+    $tag = '<script src="' . aurl($file) . "?r=$cssRandomKey\"></script>";
+    if (!file_exists($file)) {
+        $tag = "<!--missing: $tag -->";
+    }
+    echo "$tag\n";
+}
+
+?>

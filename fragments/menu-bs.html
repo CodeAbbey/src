@@ -1,0 +1,50 @@
+<ul class="nav navbar-nav">
+<li><a href="<?= url('main') ?>" title="Login and Main info">Home<?= $ctx->auth->loggedUser() === null ? ' / Login' : '' ?></a></li>
+<li><a href="<?= url('task_list') ?>" title="Programming problems list">Problems</a></li>
+<!--<li class="hidden-xs hidden-sm"><a href="<?= url('wiki', 'param', 'volumes') ?>" title="Exercises by categories">Volumes</a></li>-->
+<li><a href="/index/school">School</a></li>
+<li class="hidden-xs"><a href="<?= url('user_ranking') ?>" title="Programmer rating list">Ranking</a></li>
+<li><a href="<?= url('forum_view') ?>">Forum</a></li>
+<li class="hidden-xs"><a href="<?= url('wiki', 'param', 'help') ?>">Help</a></li>
+<li class="hidden-xs"><a href="<?= url('mess_hall') ?>">Mess</a></li>
+
+<?php if ($ctx->auth->admin()): ?>
+<li><a href="<?= url('user_list') ?>">Users</a></li>
+<?php endif; ?>
+</ul>
+
+<?php if ($ctx->auth->loggedUser() !== null): ?>
+<span class="inlined float-right menu-icons">
+    <?php if (!$ctx->auth->admin()): ?>
+    <a href="<?= url('task_random') ?>" class="hidden-xs with-image" title="Random Task yet Unsolved">
+        <img src="<?= aurl('img/random.png') ?>" alt="random task"/>
+    </a>
+    <a href="<?= url('user_settings') ?>" class="with-image" title="Settings for your account">
+        <img src="<?= aurl('img/settings.png') ?>" alt="user's settings"/>
+    </a>
+    <a href="<?= url('user_profile') ?>" class="with-image" title="Your profile (<?= $ctx->auth->username() ?>)">
+        <img src="<?= aurl('img/profile.png') ?>" alt="user's profile"/>
+    </a>
+    <?php endif; ?>
+    <a href="<?= url('logout') ?>" class="with-image" title="Logout">
+        <img src="<?= aurl('img/logout.png') ?>" alt="logout"/>
+    </a>
+</span>
+<?php endif; ?>
+
+<span class="inlined float-right clock hidden-xs" title="<?= date('M j Y') ?> - server time (GMT)" data-time="<?= time() ?>">
+    <?= date('H:i:s') ?>
+</span>
+<div class="inlined float-right menu-search hidden-xs hidden-sm">
+    <div class="ya-site-form ya-site-form_inited_no" onclick="return {'action':'https://www.codeabbey.com/index/search','arrow':false,'bg':'transparent','fontsize':14,'fg':'#000000','language':'en','logo':'rb','publicname':'Search in www.codeabbey.com','suggest':true,'target':'_self','tld':'com','type':3,'usebigdictionary':true,'searchid':2185246,'webopt':false,'websearch':false,'input_fg':'#000000','input_bg':'#ffffff','input_fontStyle':'normal','input_fontWeight':'normal','input_placeholder':'Search...','input_placeholderColor':'#888888','input_borderColor':'#7f9db9'}">
+        <form action="https://yandex.com/sitesearch" method="get" target="_self">
+            <input type="hidden" name="searchid" value="2185246"/>
+            <input type="hidden" name="l10n" value="en"/>
+            <input type="hidden" name="reqenc" value="utf-8"/>
+            <input type="search" name="text" size="15" placeholder="Search..." value=""/>
+            <input type="image" src="<?= aurl('img/search2.png') ?>" alt="Submit"/>
+        </form>
+    </div>
+</div>
+
+
