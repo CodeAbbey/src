@@ -19,6 +19,10 @@ foreach ($ctx->elems->styles as $name) {
 echo '<script>var tools = "' . url('tools') . '";</script>';
 
 foreach ($ctx->elems->scripts as $name) {
+    if (strpos($name, '://') !== false) {
+        echo "<script src=\"$name?r=$cssRandomKey\"></script>";
+        continue;
+    }
     if (strpos($name, '.') === false) $name .= ".js";
     $file = "js/$name";
     $tag = '<script src="' . aurl($file) . "?r=$cssRandomKey\"></script>";
