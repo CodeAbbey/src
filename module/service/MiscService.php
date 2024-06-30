@@ -39,5 +39,11 @@ class MiscService extends \stdClass {
         return null;
     }
 
+    function postToMessHall($userid, $message) {
+    }
+
+    function logAction($userid, $message) {
+    }
+
 }
 

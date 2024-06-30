@@ -4,11 +4,23 @@ namespace module\auth;
 
 class Auth extends \stdClass {
 
-    function login($username, $data) {
-        if (!$username) {
+    function login($username, $password) {
+        $username = preg_replace("/[\\'\\;]/", '', $username);
+        $record = $this->ctx->usersDao->findFirst("username = '$username'");
+        if ($record === false) {
             return false;
         }
-        $this->ctx->util->sessionPut('userid', $username);
+        if ($record->password != $password) {
+            $tempPwd = $this->ctx->miscService->getTaggedValue("pwd-{$record->id}");
+            if (!$tempPwd) {
+                return false;
+            }
+            list($ts, $hash) = explode(' ', $tempPwd);
+            if ($ts + 1800 < time() || $hash != $password) {
+                return false;
+            }
+        }
+        $this->ctx->util->sessionPut('userid', $record->id);
         return true;
     }
 
@@ -17,7 +29,11 @@ class Auth extends \stdClass {
     }
 
     function check($role) {
-        return !is_null($this->loggedUser());
+        $userid = $this->loggedUser();
+        if ($userid === null) {
+            return false;
+        }
+        return $this->ctx->rolesDao->findFirst("userid = $userid and role = '$role'") !== false;
     }
 
     protected function checkWithHeader($role, $header, $page) {
@@ -26,10 +42,6 @@ class Auth extends \stdClass {
         }
         $this->ctx->util->changePage($page);
         header($header);
-        return false;
-    }
-
-    public function admin() {
         return false;
     }
 
@@ -47,6 +59,23 @@ class Auth extends \stdClass {
 
     function checkWithRedirect($role, $url) {
         return $this->checkWithHeader($role, "Location: $url");
+    }
+
+    function admin() {
+        return $this->check('admin');
+    }
+
+    function user() {
+        return $this->check('user');
+    }
+
+    function username() {
+        $id = $this->loggedUser();
+        if (!$id) {
+            return '';
+        }
+        $user = $this->ctx->usersDao->read($id);
+        return $user->username;
     }
 
 }

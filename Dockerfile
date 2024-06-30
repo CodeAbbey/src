@@ -1,6 +1,7 @@
 FROM php:8.3-apache
 
-RUN apt-get update && apt-get install -y mariadb-server \
+RUN docker-php-ext-install mysqli \
+  && apt-get update && apt-get install -y mariadb-server \
   && mkdir /run/mysqld \
   && chmod a+s /usr/bin/mariadb
 
