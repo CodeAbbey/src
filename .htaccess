@@ -1,0 +1,11 @@
+RewriteEngine on
+
+#RewriteRule ^(.*)$ "http\:\/\/localhost\:8080\/$1" [R=301,L]
+
+RewriteRule ^index$ index.php
+RewriteRule ^index\/([\w]+)\/?$ index.php?page=$1 [QSA]
+RewriteRule ^index\/([\w]+)\/([A-Za-z]+)\_([A-Za-z\d\-]+)\/?$ index.php?page=$1&$2=$3 [QSA]
+
+ErrorDocument 403 /index/error404
+ErrorDocument 404 /index/error404
+Options -Indexes

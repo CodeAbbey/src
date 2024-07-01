@@ -13,49 +13,44 @@ by certain points (branches) in repository, as more and more functionality are a
     in this version to learn more.
 - [Step 2 - users](https://github.com/CodeAbbey/src/tree/v0.2-users) - now database is enabled
     and functionality of registering users, login, logout is added.
+- [Step 3 - htaccess](https://github.com/CodeAbbey/src/tree/v0.3-htaccess) - about some important
+    features which are configured outside PHP code
 
-When you first open the main page, you'll see "Login" link in the top-right corner. Clicking it
-you'll get to the login form which is provided by controller `ctl/Login.php` and corresponding
-template `ctl/login.php`. If you see any errors at this step (or any of the pages is loaded
-malformed and you find errors when looking at page source) - examine them, quite probably
-there is an issue with database, e.g.:
+### Step 3 - `.htaccess` files and Rewrite Rules
 
-- library for working with database (`mysqli`) is not installed or enabled (this shouldn't happen
-    with Docker or shared hosting setups discussed below... so investigate on your own)
-- credentials to database (user, password), or database name and connection info are wrong or
-    privileges are lacking - check them in `conf.php`, make sure you initialized user if
-    it is not shared hosting where user is preconfigured
-- database tables are not initialized yet (review setup procedure below).
+Websites in PHP generally are run by external web-server. I.e. separate application (often `Apache
+HTTPD`) listens to incoming requests and "serves" files to clients. This is different from situation when application itself listens for connections and generate responses to them (typical
+in languages like `Go` and `Java` while `Python` may be often found used in both manners).
 
-If everything is fine, you can enter some name and password and try login (which should fail) -
-and you can try registering (for which you enter password twice and supply some email, possibly
-fake). When login is successful, you are redirected to "Task List" page, for which only stub
-is currently added. User profiles and settings pages are absent yet. Try logout.
+So before control gets to `PHP` script, there are some action done by the server. And we may want
+some management of these actions.
 
-When you examine `login` page source you'll see the new modules are being used, namely
-`UserService.php` and `LoginService.php` while `MiscService.php` and `Auth.php` are updated.
-Moreover they now use `UsersDao`, `UserDataDao` and `RolesDao` (via `$ctx` variable) - they are
-"Data-Access Objects", with them we perform database operations. Most of them are just instances
-of `MysqlDao.php` and there are just typical operations (read, find, save, delete etc) - but
-for some (UserDataDao) the class is extended with dedicated file (`modules/dao/UserDataDao.php`)
-adding some extra queries (not necessary right now).
+Most obvious example is this: we have many files already - pages, controllers, fragments, modules -
+but we don't want the server to allow showing or processing them alone. I.e. if we have
+`fragments/menulogin.html` we still do not want server to respond to `http://localhost:8080/fragments/menulogin.html` by blatantly showing the file's content! As we agreed, only `index.php`
+in the root folder is executed, all other files are loaded or included by it.
 
-**Excercises**
+For such needs, server uses `.htaccess` files. They have rich syntax and our goal could be achieved
+by several ways. But the simplest is to put such a file with `Deny from all` statement into
+subdirectories which should not be processed. You may see that in this step we acutally add several
+such files.
 
-Examine database (e.g. with `sqlexec.php` page) fetching data from `users`, `roles`, `userdata`
-tables (e.g. `select * from roles`). Investigate how passwords/emails are hashed in the users
-table. Where salts for these hashes come from? You should modify them in "production"!
+**Another thing** is URL rewriting. As we mentioned beforehand by default our framework loads
+specific pages by specifying their names in the dedicated parameter, e.g. `/index.php?page=login`.
+This is perfectly working, but aesthetic (and perhaps SEO) reasons we would like server to
+accept urls like `/index/login`. For this:
 
-Try changing some user's role to `admin`. You should see the menu line is slightly different then,
-after login.
+- the server should have its `rewrite` module enabled (recreate docker image if you have earlier 
+    version)
+- `.htaccess` in the root directory should have specific "rules" configured (have a look into it,
+    but don't immediately dive into learning them, as it is an optional feature)
+- `conf.php` should have `true` for the setting `modrewrite` - this will make `url(...)` functions
+    generate links in new style.
 
-Try to invent some basic code for `ctl/user/Profile.php` controller and `pages/user/profile.php`
-page template so it shows some basic information about user, for example registration and
-last login date.
+### Excercise
 
-Examine difference of the branches for `Step-1` and `Step-2` in GitHub (click compare branches
-and select these two) to see which files were added and which lines are modified. In most cases
-you will easily grasp what is happening in those lines.
+Server still allows loading files from the root. Perhaps, find a way to configure that only
+`index.php` (and probably `sqlexec.php`) could be opened there.
 
 ## How to run
 
@@ -76,9 +71,8 @@ from it. If all is fine, the site should be ready at [http://localhost:8080/](ht
 
 ### Free (Shared) Hosting
 
-Pick some free hosting, for example [AwardSpace / AtWebpages](https://www.awardspace.com/) and simply copy
-files there. You'll need setup database here also and put its details into configuration, but at the first
-step this is not important.
+Pick some free hosting, for example [AwardSpace / AtWebpages](https://www.awardspace.com/) and simply copy files there. If you'll get error because `RewriteRule`s exist in `.htaccess` while
+the server has no `rewrite` module enabled, and you can't control it - just comment these lines.
 
 Then you'll get the site running on the web. There could be some limitations about some auxiliary functions
 (e.g. 3rd party login etc) but that's not much important for you now (such things anyway require efforts to setup).
