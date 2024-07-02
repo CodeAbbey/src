@@ -15,42 +15,55 @@ by certain points (branches) in repository, as more and more functionality are a
     and functionality of registering users, login, logout is added.
 - [Step 3 - htaccess](https://github.com/CodeAbbey/src/tree/v0.3-htaccess) - about some important
     features which are configured outside PHP code
+- [Step 4 - tasks](https://github.com/CodeAbbey/src/tree/v0.4-tasks) - pages for creating, editing,
+    listing and viewing tasks.
 
-### Step 3 - `.htaccess` files and Rewrite Rules
+### Step 4 - Tasks
 
-Websites in PHP generally are run by external web-server. I.e. separate application (often `Apache
-HTTPD`) listens to incoming requests and "serves" files to clients. This is different from situation when application itself listens for connections and generate responses to them (typical
-in languages like `Go` and `Java` while `Python` may be often found used in both manners).
+At this point few files were added in `ctl/task/...` and `pages/task/...` - they allow creating and
+editing problems (for user with "admin" role) and listing/viewing them (for all).
 
-So before control gets to `PHP` script, there are some action done by the server. And we may want
-some management of these actions.
+You'll find there some more "services" were added, relevant to task-management - and of course
+corresponding tables in the database. Most probably it is not very important to dive into the code
+right now, so you'd better try the functionality itself.
 
-Most obvious example is this: we have many files already - pages, controllers, fragments, modules -
-but we don't want the server to allow showing or processing them alone. I.e. if we have
-`fragments/menulogin.html` we still do not want server to respond to `http://localhost:8080/fragments/menulogin.html` by blatantly showing the file's content! As we agreed, only `index.php`
-in the root folder is executed, all other files are loaded or included by it.
+For this make sure database is properly updated by executing `dbinit.sql` on it. Create the first
+user (for example name the account "testadmin" - which will automatically get "admin" role. Create
+second user, e.g. "testuser").
 
-For such needs, server uses `.htaccess` files. They have rich syntax and our goal could be achieved
-by several ways. But the simplest is to put such a file with `Deny from all` statement into
-subdirectories which should not be processed. You may see that in this step we acutally add several
-such files.
+When logged in as "testadmin" you'll see on the "Task List" page (still empty) link "Add new task"
+above the table header. Clicking it leads to the task create/edit page. Here you need to supply the
+task title (url will be suggested automatically based on it), then enter problem statement in markdown format
+and "checker" code. In it's simplest form it is a function in PHP which returns array of two elements -
+input data and expected answer. For example, problem to sum two values may have "checker" like this:
 
-**Another thing** is URL rewriting. As we mentioned beforehand by default our framework loads
-specific pages by specifying their names in the dedicated parameter, e.g. `/index.php?page=login`.
-This is perfectly working, but aesthetic (and perhaps SEO) reasons we would like server to
-accept urls like `/index/login`. For this:
+    <?php
 
-- the server should have its `rewrite` module enabled (recreate docker image if you have earlier 
-    version)
-- `.htaccess` in the root directory should have specific "rules" configured (have a look into it,
-    but don't immediately dive into learning them, as it is an optional feature)
-- `conf.php` should have `true` for the setting `modrewrite` - this will make `url(...)` functions
-    generate links in new style.
+    function checker() {
+        $a = rand(100, 999);
+        $b = rand(100, 999);
+        return array("$a $b", $a + $b);
+    }
+
+    ?>
+
+There is a "Test Checker" button below the fields. It should work at least if the checker is correct.
 
 ### Excercise
 
-Server still allows loading files from the root. Perhaps, find a way to configure that only
-`index.php` (and probably `sqlexec.php`) could be opened there.
+Examine the functionality described above. Note that submitting solutions is yet to be added. Now only viewing
+problems is available for users.
+
+Think of improving "Test Checker" functionality in these two ways:
+
+- replace "alert" showing checker results with modal dialog (if you are acquainted or want to learn a bit of
+jquery-ui);
+- notice that if checker is broken, the button won't report anything - try fixing it.
+
+Besides this, look into depths of `TaskService` and learn how to create checker for comparing floating point
+values. Also there is opportunity to check the answer with code (useful if multiple answers are possible, for
+example). We'll describe details a bit later (or you can deduce them from the code and instructions on the main
+site's task preparation wiki page).
 
 ## How to run
 

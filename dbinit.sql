@@ -58,6 +58,15 @@ create table tasks (
     index (url)
 );
 
+drop table if exists taskdata;
+create table taskdata (
+    id int primary key auto_increment,
+    taskid int,
+    type varchar(16),
+    data text,
+    index (taskid)
+);
+
 drop table if exists usertasks;
 create table usertasks (
     id int primary key auto_increment,
@@ -97,3 +106,4 @@ create table tagval (
 drop view if exists tasklist;
 create view tasklist as select * from tasks order by solved desc, id asc;
 
+insert into tags (title) values ('unlabeled');

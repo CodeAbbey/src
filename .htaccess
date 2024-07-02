@@ -4,6 +4,7 @@ RewriteEngine on
 
 RewriteRule ^index$ index.php
 RewriteRule ^index\/([\w]+)\/?$ index.php?page=$1 [QSA]
+RewriteRule ^index\/([\w]+)\/([A-Za-z\d\-\.]+)\/?$ index.php?page=$1&param=$2 [QSA]
 RewriteRule ^index\/([\w]+)\/([A-Za-z]+)\_([A-Za-z\d\-]+)\/?$ index.php?page=$1&$2=$3 [QSA]
 
 ErrorDocument 403 /index/error404

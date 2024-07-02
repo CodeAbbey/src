@@ -3,20 +3,8 @@
 <h1><?= $model->title ?></h1>
 <div class="hint">Note that you can solve most task in any order!<br/>
 Already solved ones are at the bottom of the table.<br/>
-<!-- Solve more and win a <a class="strong" href="<?= url('wiki', 
-'param', 'certificates') ?>">certificate</a>-->
-<?php if ($ctx->userService->messAllowed()) : ?>
-<div>
-  <br/><img src="https://codeabbey.github.io/data/oa/dancecat.gif" width="100" align="left">
-  <b>Pssst!</b><br/>
-  Our Free Certificates: for <b>Zealous Coder</b> and for <b>Fanatic Girl-Coder</b> - <a href="https://www.codeabbey.com/index/wiki/certificates">read more</a>!
-  <br/>
-  Check this
-  <a href="/index/subscribe"
-    class="strong" target="_blank">e-mail subscription page</a> to set-up 
-notifications about new tasks!
-</div>
-<?php endif; ?>
+
+<? $ctx->util->fragment('tasklistnotice') ?>
 </div>
 </div>
 <?= $ctx->util->fragment('adblock') ?>
