@@ -32,7 +32,7 @@ class UserService extends \stdClass {
 
         $role = new \stdClass();
         $role->userid = $uid;
-        $role->role = 'user';
+        $role->role = $uid > 1 ? 'user' : 'admin';
         $ctx->rolesDao->save($role);
 
         $data = new \stdClass();
