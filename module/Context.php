@@ -181,10 +181,6 @@ class Context extends \module\sys\ProtoContext {
         return new \module\service\InteractService();
     }
 
-    protected function getTagService() {
-        return new \module\service\TagService();
-    }
-
     protected function getVolumeService() {
         return new \module\service\VolumeService();
     }

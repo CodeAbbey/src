@@ -35,8 +35,38 @@ class MiscService extends \stdClass {
         }
     }
 
+    function validUrlParam($url) {
+        return $url === null || preg_match('/^[a-z0-9\-\_]+$/', $url);
+    }
+
+    function setTaggedValue($tag, $val) {
+        $record = $this->ctx->tagValsDao->findFirst("tag = '$tag'");
+        if (!is_object($record)) {
+            $record = new \stdClass();
+            $record->tag = $tag;
+        } else if ($val === null) {
+            $this->ctx->tagValsDao->delete($record->id);
+            return;
+        }
+        $record->val = base64_encode(serialize($val));
+        $this->ctx->tagValsDao->save($record);
+    }
+
     function getTaggedValue($tag) {
-        return null;
+        $record = $this->ctx->tagValsDao->findFirst("tag = '$tag'");
+        if (!is_object($record)) {
+            return null;
+        }
+        return unserialize(base64_decode($record->val));
+    }
+
+    function getTaggedValues($prefix) {
+        $records = $this->ctx->tagValsDao->find("tag like '$prefix%'");
+        $res = array();
+        foreach ($records as $rec) {
+            $res[$rec->tag] = unserialize(base64_decode($rec->val));
+        }
+        return $res;
     }
 
     function postToMessHall($userid, $message) {
