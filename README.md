@@ -17,45 +17,23 @@ by certain points (branches) in repository, as more and more functionality are a
     features which are configured outside PHP code
 - [Step 4 - tasks]() - pages for creating, editing, listing and viewing tasks.
 - [Step 5 - submit](https://github.com/CodeAbbey/src/tree/v0.5-submit) - submission and checking.
+- [Step 6 - userrank](https://github.com/CodeAbbey/src/tree/v0.6-userrank) - user profile and ranking pages.
 
-### Step 5 - Submission and Checking
+### Step 6 - User profile and ranking pages
 
-Now site gets its main functionality: user can submit solution for the task - and system will check
-it (answer), with eventually updating user and overall stats if solution is correct.
+Since we are able to submit and solve problems, we want user pages to work - here lists of solved problems are
+shown and some info about user (country, registration date, last login etc). In this update we add this page
+and also page for user-ranking (it is referenced from main menu).
 
-This all is governed by `./ctl/Attempt` controller mainly. However it depends on a number of functions
-from the `TaskService` (probably largest part of this service is for checking answers and updating stats).
-You may investigate all this logic but again this is not crucial to know in details.
+One of the smaller issues by now is that we haven't yet added country support (it is not complicated but
+there is a lot of small data so let's do it separately). So country list shows single entry, unknown country.
 
-Some things not implemented yet at this point are:
-
-- user profile page where solved problems are visible
-- user ranking page
-- executors which run the code when various programming language buttons are clicked around solution area
-
-The first two are yet to come in the next update.
-
-As about code executors - they are run in a separate sandbox, which in turn requires a dedicated server -
-at the moment it is out of the scope of the given project. You may prefer to hid all the buttons (except for
-javascript - on the other hand it is possible to add runners for some languages implemented in JS, i.e.
-working in-browser - anyway let's not dive into it at the moment).
-
-**Points Recalculation** is yet another subtle thing. Website calculates user score based on the cost of the
-tasks solved - but at the same time cost of the tasks changes by and by according to number of solvers.
-
-This process is governed by `MiscService::calcPoints()` which by default is invoked either immediately after each
-successful solution. However if your installation hosts many thousands of users, recalculation takes some
-time (e.g. it may be several seconds and more as database grow). In this case it is better to invoke recalculation
-by external cron job. For this you setup `calcPointsSecret` to some string `XXXX` in the configuration and
-point your cron job to request `/index/tools_calcpoints/XXXX`, e.g. passing secret in the url.
+There is also separate page for user's tried but not solved problems.
 
 ### Excercise
 
-Reinitialize the database and create three users (admin and two normal ones). Then execute `taskinit.sql` to populate
-the database with a couple of simple problems. Try solving them not necessarily at the first attempt - and after
-each submission check, how scores for the tasks are updated. Then change `calcPointSecret` to some string and
-make sure automatic recalculation is turned off, you'll need to request the mentioned url manually or by cron
-to see the changes.
+Reinitialize the database, create tasks and users (e.g. tasks from the `taskinit.sql` file) - try solving something
+and see the newly added pages.
 
 ## How to run
 
