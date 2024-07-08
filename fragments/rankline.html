@@ -1,0 +1,24 @@
+<?php $entry = $model->curEntry ?>
+<tr class="centered <?= $entry->current ? 'bgr-ltblue strong' : 'none';  ?>">
+    <td><?= $entry->rankpos ?></td>
+    <td>
+        <?php if ($entry->avatar != '') : ?>
+            <img class="avatar-small"
+                src="<?= preg_replace('/^http\:/', 'https:', $entry->avatar) ?>" alt="User avatar"/>
+        <?php else : ?>
+            <span class="avatar-small">&nbsp;</span>
+        <?php endif; ?>
+    </td>
+    <td>
+        <a href="<?= $entry->url ?>"><?= $entry->username ?></a>
+        &nbsp;
+        <img src="<?= aurl('img/flags/' . strtolower($entry->country) . '.gif') ?>"
+            alt="<?= $entry->countryTitle ?>"
+            title="<?= $entry->countryTitle ?>"/>
+    </td>
+    <td><?= $entry->language ?></td>
+    <td><?= $entry->rank ?></td>
+    <td><?= $entry->points ?></td>
+    <td><?= $entry->solved ?></td>
+</tr>
+

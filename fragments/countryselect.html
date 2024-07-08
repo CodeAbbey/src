@@ -1,0 +1,7 @@
+<select name="country" onchange="$(this).closest('form').get(0).submit();" class="form-control">
+    <option value="">--- Select Country ---</option>
+    <?php foreach ($model->countries as $countryVal => $country) : ?>
+    <option <?= $countryVal == $model->country ? 'selected="true"' : ''?> value="<?= $countryVal ?>"><?= $country->title ?></option>
+    <?php endforeach; ?>
+</select>
+

@@ -111,12 +111,28 @@ create table pfx_solutions (
     index(usertaskid)
 );
 
+drop table if exists pfx_friends;
+create table pfx_friends (
+    id int primary key auto_increment,
+    userid int,
+    targetid int,
+    visible int default 1,
+    index (userid),
+    index (targetid)
+);
+
 drop table if exists pfx_tagval;
 create table pfx_tagval (
     id int primary key auto_increment,
     tag varchar(32),
     val text,
     index (tag)
+);
+
+drop table if exists pfx_countries;
+create table pfx_countries (
+    code varchar(32) primary key,
+    title varchar(120)
 );
 
 drop table if exists pfx_challenges;
@@ -130,6 +146,12 @@ create table pfx_challenges (
     index (taskid),
     index (userid)
 );
+
+drop view if exists pfx_userrank;
+create view pfx_userrank (id, username, url, solved, failed, points, rankpos, created, country, language, avatar) as
+    select u.id, u.username, u.url, d.solved, d.failed, d.points, d.rankpos, d.created, d.country, d.language, d.avatar
+    from pfx_users u join pfx_userdata d on u.id = d.userid
+    order by d.rankpos desc;
 
 drop view if exists pfx_tasklist;
 create view pfx_tasklist as select * from pfx_tasks order by solved desc, id asc;
@@ -149,3 +171,5 @@ create view pfx_userpoints as select pts.userid, pts.sumcost + coalesce(ch.sumco
     order by sumcost desc;
 
 insert into pfx_tags (title) values ('unlabeled');
+insert into pfx_countries (code, title) values ('ZZ','Unknown');
+

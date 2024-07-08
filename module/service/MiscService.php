@@ -4,6 +4,17 @@ namespace module\service;
 
 class MiscService extends \stdClass {
 
+    function countryNameByCode($code) {
+        return $code;
+    }
+
+    function formatDate($ts, $withTime = false) {
+        if (gettype($ts) == 'string') {
+            $ts = strtotime($ts);
+        }
+        return date($withTime ? 'M j Y H:i' : 'M j Y', $ts);
+    }
+
     function formatTitle() {
         if (empty($this->ctx->elems->title)) {
             return 'CodeAbbey - programming problems to practice and learn for beginners';
@@ -40,6 +51,28 @@ class MiscService extends \stdClass {
         $twoWeeksAgo = time() - 86400 * 14;
         $time = max($time, $twoWeeksAgo);
         header('Last-Modified: ' . date("D, d M Y H:i:s", $time) . ' GMT');
+    }
+
+    function listIds(&$arr, $field, $imploded = true) {
+        $res = $this->summarize($arr, $field);
+        $res = array_keys($res);
+        if ($imploded) {
+            $res = implode(',', $res);
+        }
+        return $res;
+    }
+
+    function summarize(&$arr, $field) {
+        $res = array();
+        foreach ($arr as $elem) {
+            $idx = $elem->$field;
+            if (!isset($res[$idx])) {
+                $res[$idx] = 1;
+            } else {
+                $res[$idx]++;
+            }
+        }
+        return $res;
     }
 
     function validUrlParam($url) {

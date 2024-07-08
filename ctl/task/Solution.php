@@ -53,13 +53,6 @@ if ($ctx->util->paramGet('plain') && $currentUserId == $user->id) {
     return;
 }
 
-if (in_array($ctx->util->sessionGet('country'), ['ID'])) {
-    $ctx->util->changePage('message');
-    $model->msg = "Solutions are temporarily hidden due to excessive cheating"
-        . " (particularly by the nice fellows from the University of Jakarta)";
-    return;
-}
-
 if ($ctx->challengeService->challengeExists($task->id)
         && ($currentUserId != $user->id && !$ctx->auth->admin())) {
     $ctx->util->redirect(url('task_chlng_stats', 'param', $task->url));
