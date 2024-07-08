@@ -153,8 +153,8 @@ class UserService extends \stdClass {
     function solvedTaggedTasks($userid, $tag = 'c-1') {
         $res = $this->ctx->userTasksDao->makeLookup('taskid',
             "userid = $userid and solved = 1 and variant = 0 "
-            . "and taskid in (select taskid from mess_tasktags where "
-            . "tagid = (select id from mess_tags where title = '$tag'))");
+            . "and taskid in (select taskid from {$this->ctx->taskTagsDao->getTable()} where "
+            . "tagid = (select id from {$this->ctx->tagsDao->getTable()} where title = '$tag'))");
         return array_keys($res);
     }
 

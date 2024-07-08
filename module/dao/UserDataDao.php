@@ -15,16 +15,16 @@ class UserDataDao extends MysqlDao {
     }
 
     function updatePoints() {
-        $this->query('update mess_userdata join mess_userpoints using(userid) '
+        $this->query('update ' . $this->getTable() . ' join ' . $this->getPrefix() . 'userpoints using(userid) '
             . 'set points = sumcost');
-        $this->query('update mess_userdata set rankpos = '
+        $this->query('update ' . $this->getTable() . ' set rankpos = '
             . '(select @idx := @idx + 1 from (select @idx := 0) s) '
             . 'order by points desc');
     }
 
     function languages() {
         $res = $this->query('select * from '
-            . '(select language,count(1) as cnt from mess_userdata group by language) '
+            . '(select language,count(1) as cnt from ' . $this->getTable() . ' group by language) '
             . 'subq order by cnt desc');
         return $this->objectsArray($res);
     }

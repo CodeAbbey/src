@@ -45,45 +45,22 @@ if ($ctx->auth->user()) {
     $user = $ctx->usersDao->findFirst("id = $userid");
     $userdata = $ctx->userdataDao->findFirst("userid = $userid");
     $usertasks = $ctx->userTasksDao->find("taskid = {$model->task->id} and userid = $userid");
-    if ($userdata->cheatcnt >= 10) {
-        $model->suspended = true;
-    }
     $model->codes = array();
     foreach ($usertasks as $ut) {
         $model->codes[$ut->language] = url('task_solution', 'user', $user->url, 'task', $model->task->url, 'lang', urlencode($ut->language));
     }
-    
+
     $model->languages = $ctx->langService->languagesArray();
-    
+
     $model->testData = $ctx->taskService->prepareData($model->task->id);
 
     if ($model->task->author == $user->url) {
         $model->checkerCode = str_replace('<?php', '', $ctx->taskService->loadChecker($model->task->id));
     }
 
-    $model->lastSolved = $ctx->userTasksDao->lastSolved($userid);
-    $model->lastSolved[] = $ctx->util->sessionGet('last_subm') ?? 0;
-    if ($model->task->id > 5 && $userdata->cheatcnt > 0) {
-        $model->lastSolved[2] += 180;
-        $model->lastSolved[1] += $userdata->solved * 60;
-        $ctx->util->sessionPut('lastSolved', implode(' ', $model->lastSolved));
-        $neverSolved = $ctx->userTasksDao->neverSolvedIds($userid);
-        if (count($neverSolved) > 5 && !in_array($model->task->id, $neverSolved)) {
-            $model->solveUnsolved = $user->url;
-        }
-    }
-
     $ctx->elems->scripts[] = 'task/_view';
     $ctx->elems->scripts[] = '_ace/ace';
-    $ctx->elems->scripts[] = '_sql/sql-wasm';
 
-    if (apcu_enabled()) {
-        $cached = false;
-        $pages = apcu_fetch($user->url, $cached);
-        if (!$cached) $pages = "";
-        $pages = $model->task->title . ' ' . time() . "\n" . $pages;
-        apcu_store($user->url, $pages, 3600);
-    }
 }
 
 if (!$userid) {
@@ -106,7 +83,6 @@ if (!empty($locale) && $locale != 'en') {
     $ctx->elems->title .= " ({$alternativeLocales[$locale]})";
 }
 $ctx->elems->keywords = $model->tags;
-//$ctx->elems->styles[] = 'codemirror';
 $ctx->elems->styles[] = 'jsmonoterm';
 $ctx->elems->scripts[] = 'jsmonoterm';
 $ctx->elems->analytics = true;

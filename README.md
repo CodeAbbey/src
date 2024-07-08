@@ -15,55 +15,47 @@ by certain points (branches) in repository, as more and more functionality are a
     and functionality of registering users, login, logout is added.
 - [Step 3 - htaccess](https://github.com/CodeAbbey/src/tree/v0.3-htaccess) - about some important
     features which are configured outside PHP code
-- [Step 4 - tasks](https://github.com/CodeAbbey/src/tree/v0.4-tasks) - pages for creating, editing,
-    listing and viewing tasks.
+- [Step 4 - tasks]() - pages for creating, editing, listing and viewing tasks.
+- [Step 5 - submit](https://github.com/CodeAbbey/src/tree/v0.5-submit) - submission and checking.
 
-### Step 4 - Tasks
+### Step 5 - Submission and Checking
 
-At this point few files were added in `ctl/task/...` and `pages/task/...` - they allow creating and
-editing problems (for user with "admin" role) and listing/viewing them (for all).
+Now site gets its main functionality: user can submit solution for the task - and system will check
+it (answer), with eventually updating user and overall stats if solution is correct.
 
-You'll find there some more "services" were added, relevant to task-management - and of course
-corresponding tables in the database. Most probably it is not very important to dive into the code
-right now, so you'd better try the functionality itself.
+This all is governed by `./ctl/Attempt` controller mainly. However it depends on a number of functions
+from the `TaskService` (probably largest part of this service is for checking answers and updating stats).
+You may investigate all this logic but again this is not crucial to know in details.
 
-For this make sure database is properly updated by executing `dbinit.sql` on it. Create the first
-user (for example name the account "testadmin" - which will automatically get "admin" role. Create
-second user, e.g. "testuser").
+Some things not implemented yet at this point are:
 
-When logged in as "testadmin" you'll see on the "Task List" page (still empty) link "Add new task"
-above the table header. Clicking it leads to the task create/edit page. Here you need to supply the
-task title (url will be suggested automatically based on it), then enter problem statement in markdown format
-and "checker" code. In it's simplest form it is a function in PHP which returns array of two elements -
-input data and expected answer. For example, problem to sum two values may have "checker" like this:
+- user profile page where solved problems are visible
+- user ranking page
+- executors which run the code when various programming language buttons are clicked around solution area
 
-    <?php
+The first two are yet to come in the next update.
 
-    function checker() {
-        $a = rand(100, 999);
-        $b = rand(100, 999);
-        return array("$a $b", $a + $b);
-    }
+As about code executors - they are run in a separate sandbox, which in turn requires a dedicated server -
+at the moment it is out of the scope of the given project. You may prefer to hid all the buttons (except for
+javascript - on the other hand it is possible to add runners for some languages implemented in JS, i.e.
+working in-browser - anyway let's not dive into it at the moment).
 
-    ?>
+**Points Recalculation** is yet another subtle thing. Website calculates user score based on the cost of the
+tasks solved - but at the same time cost of the tasks changes by and by according to number of solvers.
 
-There is a "Test Checker" button below the fields. It should work at least if the checker is correct.
+This process is governed by `MiscService::calcPoints()` which by default is invoked either immediately after each
+successful solution. However if your installation hosts many thousands of users, recalculation takes some
+time (e.g. it may be several seconds and more as database grow). In this case it is better to invoke recalculation
+by external cron job. For this you setup `calcPointsSecret` to some string `XXXX` in the configuration and
+point your cron job to request `/index/tools_calcpoints/XXXX`, e.g. passing secret in the url.
 
 ### Excercise
 
-Examine the functionality described above. Note that submitting solutions is yet to be added. Now only viewing
-problems is available for users.
-
-Think of improving "Test Checker" functionality in these two ways:
-
-- replace "alert" showing checker results with modal dialog (if you are acquainted or want to learn a bit of
-jquery-ui);
-- notice that if checker is broken, the button won't report anything - try fixing it.
-
-Besides this, look into depths of `TaskService` and learn how to create checker for comparing floating point
-values. Also there is opportunity to check the answer with code (useful if multiple answers are possible, for
-example). We'll describe details a bit later (or you can deduce them from the code and instructions on the main
-site's task preparation wiki page).
+Reinitialize the database and create three users (admin and two normal ones). Then execute `taskinit.sql` to populate
+the database with a couple of simple problems. Try solving them not necessarily at the first attempt - and after
+each submission check, how scores for the tasks are updated. Then change `calcPointSecret` to some string and
+make sure automatic recalculation is turned off, you'll need to request the mentioned url manually or by cron
+to see the changes.
 
 ## How to run
 

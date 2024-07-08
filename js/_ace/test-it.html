@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <script src="./ace.js"></script>
+</head>
+<body>
+<div id="ace-editor" style="height:400px;border:1px solid #888;"></div>
+
+<script>
+    solutionArea = ace.edit('ace-editor');
+    solutionArea.setShowPrintMargin(false);
+    solutionArea.setFontSize(16);
+    solutionArea.getSession().setUseWorker(false);
+    solutionArea.getSession().setMode("ace/mode/plain_text");
+</script>
+</body>
+</html>

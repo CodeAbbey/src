@@ -10,7 +10,7 @@ $ctx->elems->conf->mysql = array(
     'username' => 'causer',
     'password' => 'somepwd',
     'db' => 'ca',
-    'prefix' => '', // needed if the hosting DB prepends every table name with some prefix
+    'prefix' => 'pfx_',
     'charset' => 'utf8'
 );
 
@@ -18,5 +18,7 @@ $ctx->elems->conf->customAds = false;
 
 $ctx->elems->conf->passwordSalt = 'salt#cadabraabra';
 $ctx->elems->conf->emailSalt = 'salt#racadabraab';
+
+$ctx->elems->conf->calcPointsSecret = null;
 
 ?>

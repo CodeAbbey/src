@@ -9,12 +9,14 @@ class TasksDao extends MysqlDao {
     }
 
     function updateStats() {
-        $this->query('update mess_tasks set solved = (select count(userid) from mess_usertasks where solved > 0 and taskid = mess_tasks.id)');
+        $this->query('update ' . $this->getTable()
+            . ' set solved = (select count(userid) from '
+            . $this->getPrefix() . 'usertasks where solved > 0 and taskid = ' . $this->getTable() . '.id)');
     }
 
     function updateCosts() {
-        $this->query('update mess_tasks full join '
-            . '(select max(solved) + 1 as maxsolved from mess_tasks) mx '
+        $this->query('update ' . $this->getTable() . ' full join '
+            . '(select max(solved) + 1 as maxsolved from ' . $this->getTable() . ') mx '
             . 'set cost = 1 + log10(maxsolved / (solved + 1)) * 4');
     }
 

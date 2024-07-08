@@ -30,8 +30,9 @@ class MysqlDao extends \stdClass {
     }
 
     function save($entity) {
-        $a = (array) $entity;
-        foreach ($a as $k => $v) {
+        $a = [];
+        foreach (((array) $entity) as $k => $v) {
+            if ($v === null) continue;
             $a[$k] = $this->conn->escape_string($v);
         }
         $names = implode(',', array_keys($a));
@@ -151,6 +152,10 @@ class MysqlDao extends \stdClass {
 
     public function getTable() {
         return $this->table;
+    }
+
+    public function getPrefix() {
+        return self::$shared['prefix'];
     }
 
     protected static function init() {

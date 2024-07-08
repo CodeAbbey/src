@@ -28,9 +28,9 @@ class UserTasksDao extends MysqlDao {
 
     function searchSolution($taskid, $snippet, $count=20, $offset = 0) {
         $res = $this->query(
-            "select url, language, length(s.solution) as len from mess_usertasks ut "
-            . "join mess_solutions s on ut.id = s.usertaskid "
-            . "join mess_users u on ut.userid = u.id "
+            "select url, language, length(s.solution) as len from {$this->getTable()} ut "
+            . "join {$this->getPrefix()}solutions s on ut.id = s.usertaskid "
+            . "join {$this->getPrefix()}users u on ut.userid = u.id "
             . "where taskid = $taskid and INSTR(FROM_BASE64(solution), 
 '$snippet') limit $count offset $offset");
         return $this->objectsArray($res);
@@ -38,22 +38,22 @@ class UserTasksDao extends MysqlDao {
 
     function solvers($criteria, $noblanks=true) {
         $res = $this->query(
-            "select ut.id from mess_usertasks ut "
-            . "join mess_solutions s on ut.id = s.usertaskid "
+            "select ut.id from {$this->getTable()} ut "
+            . "join {$this->getPrefix()}solutions s on ut.id = s.usertaskid "
             . "where $criteria" . ($noblanks ? " and length(s.solution) > 13" : ""));
         return $this->singleFieldArray($res);
     }
 
     function languages() {
         $res = $this->query('select * from '
-            . '(select language,count(1) as cnt from mess_usertasks where solved=1 group by language) '
+            . '(select language,count(1) as cnt from ' . $this->getTable() . ' where solved=1 group by language) '
             . 'subq order by cnt desc');
         return $this->objectsArray($res);
     }
 
     function lastSolved($userid) {
         $res = $this->query("select taskid, ts as ts "
-            . "from mess_usertasks "
+            . "from {$this->getTable()} "
             . "where userid = $userid and solved=1 order by ts desc limit 1");
         if (!$res) {
             return [0, 0];
@@ -63,7 +63,7 @@ class UserTasksDao extends MysqlDao {
     }
 
     function neverSolvedIds($userid) {
-        $res = $this->query("select taskid from mess_usertasks "
+        $res = $this->query("select taskid from {$this->getTable()} "
             . "where userid=$userid group by taskid having max(solved)=-1");
         return $this->singleFieldArray($res);
     }

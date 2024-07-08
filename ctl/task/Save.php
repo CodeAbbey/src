@@ -30,13 +30,13 @@ $statement = $ctx->util->sillyDecode($statement);
 $checker = $ctx->util->paramPost('checker');
 $checker = $ctx->util->sillyDecode($checker);
 
-if (!$task->id) {
+if (empty($task->id)) {
     unset($task->id);
 }
-if (!$task->author) {
+if (empty($task->author)) {
     unset($task->author);
 }
-if (!$task->volumeid) {
+if (empty($task->volumeid)) {
     unset($task->volumeid);
 }
 

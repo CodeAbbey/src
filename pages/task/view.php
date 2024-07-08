@@ -144,12 +144,7 @@
 <div class="row">
 
     <div class="col-xs-7">
-        <?php if (!isset($model->suspended)) : ?>
-        <input type="submit" value="Submit" class="btn btn-default" 
-            data-last="<?= implode(' ', $model->lastSolved) ?>"/>
-        <?php else : ?>
-        Sorry, account is suspended for investigation and submissions are not allowed temporarily.
-        <?php endif; ?>
+        <input type="submit" value="Submit" class="btn btn-default"/>
     </div>
 
     <div class="col-xs-5">

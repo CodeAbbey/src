@@ -4,8 +4,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $output = [];
     $code = -1;
     $input = file_get_contents('php://input');
-    exec("echo -n '$input' | base64 --decode | mariadb -B", $output, $code);
-    echo implode("\n", $output);
+    exec("echo -n '$input' | base64 --decode | mariadb -B 2>&1", $output, $code);
+    echo 'Result: ' . ($code === 0 ? 'OK' : "Fail ($code)") . "\n";
+    $output = trim(implode("\n", $output));
+    echo $output ? $output : '(no output)';
     return;
 }
 
@@ -25,10 +27,14 @@ unless you create new database.</p>
 <script>
 function doExec() {
     var req = new XMLHttpRequest();
-    req.open("POST", "/sqlexec.php", false);
-    var data = btoa(document.getElementById('commands').value);
-    req.send(data);
-    document.getElementById('output').innerText = req.responseText;
+    var output = document.getElementById('output');
+    output.innerText = 'waiting for result...';
+    setTimeout(function() {
+        req.open("POST", "/sqlexec.php", false);
+        var data = btoa(document.getElementById('commands').value);
+        req.send(data);
+        output.innerText = req.responseText;
+    }, 100);
 }
 </script>
 

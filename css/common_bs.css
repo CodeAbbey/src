@@ -364,6 +364,9 @@ pre code {
 .failed {
     background-color: #f88 !important;
 }
+.tried {
+    background-color: #faf !important;
+}
 
 .bgr-ltblue {
     background: #bdf;

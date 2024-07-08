@@ -1,0 +1,9 @@
+#task-attempt input[type=submit] {
+    width:150px;
+    height:50px;
+    font-size:200%;
+}
+
+#code-tools input {
+    width: 105px;
+}

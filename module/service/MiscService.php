@@ -35,8 +35,25 @@ class MiscService extends \stdClass {
         }
     }
 
+    function headerLastModified($timestamp) {
+        $time = strtotime($timestamp);
+        $twoWeeksAgo = time() - 86400 * 14;
+        $time = max($time, $twoWeeksAgo);
+        header('Last-Modified: ' . date("D, d M Y H:i:s", $time) . ' GMT');
+    }
+
     function validUrlParam($url) {
         return $url === null || preg_match('/^[a-z0-9\-\_]+$/', $url);
+    }
+
+    function validUrlParams($args) {
+        $args = func_get_args();
+        foreach ($args as $a) {
+            if (!$a || !$this->validUrlParam($a)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function setTaggedValue($tag, $val) {
@@ -73,6 +90,23 @@ class MiscService extends \stdClass {
     }
 
     function logAction($userid, $message) {
+    }
+
+    function calcPoints() {
+        $this->ctx->tasksDao->updateCosts();
+        $tasks = $this->ctx->tasksDao->makeLookup();
+
+        $res = [];
+        foreach ($tasks as $t) {
+            if ($this->ctx->challengeService->challengeExists($t->id)) {
+                $this->ctx->challengeService->recalculate($t->id);
+            }
+            $res[] = "{$t->title}: {$t->cost}\n";
+        }
+
+        $this->ctx->userDataDao->updatePoints();
+
+        return $res;
     }
 
 }
