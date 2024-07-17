@@ -14,7 +14,9 @@ $ctx->elems->conf->mysql = array(
     'charset' => 'utf8'
 );
 
-$ctx->elems->conf->customAds = false;
+$ctx->elems->conf->custFrag = array(
+    'adblock' => ''
+);
 
 $ctx->elems->conf->passwordSalt = 'salt#cadabraabra';
 $ctx->elems->conf->emailSalt = 'salt#racadabraab';

@@ -4,7 +4,7 @@
 <div class="hint">Note that you can solve most task in any order!<br/>
 Already solved ones are at the bottom of the table.<br/>
 
-<? $ctx->util->fragment('tasklistnotice') ?>
+<? $ctx->util->fragment('tasklist_notice') ?>
 </div>
 </div>
 <?= $ctx->util->fragment('adblock') ?>

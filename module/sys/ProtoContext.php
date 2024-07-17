@@ -2,13 +2,9 @@
 
 namespace module\sys;
 
-class ProtoContext {
-
-    protected $names = [];
+class ProtoContext extends \stdClass {
 
     function __get($name) {
-        $v = $this->names[$name] ?? null;
-        if ($v !== null) return $v;
         $methodName = 'get' . ucfirst($name);
         if (!method_exists($this, $methodName)) {
             throw new \Exception("No property '$name' in Context!");
@@ -17,7 +13,7 @@ class ProtoContext {
         if (is_object($res)) {
             $res->ctx = $this;
         }
-        $this->names[$name] = $res;
+        $this->$name = $res;
         return $res;
     }
 

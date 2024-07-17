@@ -91,6 +91,10 @@ class Util extends \stdClass {
     }
 
     function fragment($name) {
+        $name = $this->ctx->elems->conf->custFrag[$name] ?? $name;
+        if ($name === '') {
+            return;
+        }
         $name = str_replace('_', '/', $name);
         if (!addfile('fragments/' . $name . '.html')) {
             echo '??? FRAGMENT: ' . $name . ' ???';
