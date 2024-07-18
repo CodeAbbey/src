@@ -1,4 +1,11 @@
-# Instructions
+# CodeAbbey - opensource initiative
+
+It is a website with programming exercises. Started as **[https://www.codeabbey.com](https://www.codeabbey.com)**
+in September of 2013 it is now (as of summer 2024) moving to opensource, so that everyone can quickly setup
+similar website for personal coding puzzle collection, or for school, enterprise company needs (e.g. for
+interviewing, screening candidates).
+
+## Instructions
 
 Here are two parts - one about how it works and another about how to run it. Consult them in any order according
 to your needs.
@@ -18,22 +25,15 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 4 - tasks]() - pages for creating, editing, listing and viewing tasks.
 - [Step 5 - submit](https://github.com/CodeAbbey/src/tree/v0.5-submit) - submission and checking.
 - [Step 6 - userrank](https://github.com/CodeAbbey/src/tree/v0.6-userrank) - user profile and ranking pages.
+- [Step 7 - sync](https://github.com/CodeAbbey/src/tree/v0.7-sync) - no critical features added,
+    mainly some improvements due to syncronizing codebase with existing website.
 
-### Step 6 - User profile and ranking pages
+### Step 7 - synchronization with main site
 
-Since we are able to submit and solve problems, we want user pages to work - here lists of solved problems are
-shown and some info about user (country, registration date, last login etc). In this update we add this page
-and also page for user-ranking (it is referenced from main menu).
-
-One of the smaller issues by now is that we haven't yet added country support (it is not complicated but
-there is a lot of small data so let's do it separately). So country list shows single entry, unknown country.
-
-There is also separate page for user's tried but not solved problems.
-
-### Excercise
-
-Reinitialize the database, create tasks and users (e.g. tasks from the `taskinit.sql` file) - try solving something
-and see the newly added pages.
+At previous steps a number of changes were made which made the code significantly diverge from the main site,
+which is inconvenient for further manipulations and support. So a kind of "sync-up" process was undertaken,
+which involved some changes and additions both in main site code and also here. All should work as on step 6,
+there are minor improvements to main page.
 
 ## How to run
 
