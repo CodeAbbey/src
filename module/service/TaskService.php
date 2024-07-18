@@ -59,6 +59,65 @@ class TaskService extends \stdClass {
         return $result;
     }
 
+    function executePyChecker($code, $pyver, $expected = null, $answer = null) {
+      $tmp = tmpfile();
+      $fname = stream_get_meta_data($tmp)['uri'];
+      if ($expected !== null) {
+          fwrite($tmp, "expected=\"\"\"$expected\"\"\"\n");
+      }
+      if ($answer !== null) {
+          fwrite($tmp, "answer=\"\"\"$answer\"\"\"\n");
+      }
+      fwrite($tmp, $code);
+      fflush($tmp);
+      $res = array();
+      $retcode = -1;
+      if (isset($this->ctx->elems->conf->interpreters[$pyver])) {
+          $pyver = $this->ctx->elems->conf->interpreters[$pyver];
+      }
+      exec("$pyver $fname 2>&1", $res, $retcode);
+      fclose($tmp);
+      if ($retcode !== 0) {
+          return array(
+              'Input generation error - tell admin please:'
+                  . implode("\n", $res), 'tubz');
+      }
+      $ans = '';
+      while (count($res) > 0) {
+          $ans = array_pop($res);
+          if ($ans !== '') {
+              break;
+          }
+      }
+      if ($expected !== null) {
+          return $ans;
+      }
+      return array(implode("\n", $res), $ans);
+    }
+
+    function executePerlChecker($code) {
+      $tmp = tmpfile();
+      $fname = stream_get_meta_data($tmp)['uri'];
+      fwrite($tmp, $code);
+      fflush($tmp);
+      $res = array();
+      $code = -1;
+      exec('perl ' . $fname, $res, $code);
+      fclose($tmp);
+      if ($code !== 0) {
+          return array(
+              'Input generation error - tell admin please', 'tubz');
+      }
+      $ans = '';
+      while (count($res) > 0) {
+          $ans = array_pop($res);
+          if ($ans !== '') {
+              break;
+          }
+      }
+      return array(implode("\n", $res), $ans);
+    }
+
     function testChecker($code) {
         try {
             $res = $this->executeChecker($code);
@@ -71,9 +130,20 @@ class TaskService extends \stdClass {
         return "{$res[0]}\n\n{$res[1]}";
     }
 
+    public function arenaChecker($taskid, $sol1text, $sol2text) {
+        $code = $this->loadChecker($taskid);
+        return $this->executeChecker($code, '#php ', null, array($sol1text, $sol2text));
+    }
+
     public function loadChecker($taskid) {
         $data = $this->ctx->taskDataDao->findFirst("taskid = $taskid and type = 'checker'");
         return base64_decode($data->data);
+    }
+
+    function testData($taskid) {
+        $code = $this->loadChecker($taskid);
+        $result = $this->executeChecker($code);
+        return $result;
     }
 
     function prepareData($taskid) {

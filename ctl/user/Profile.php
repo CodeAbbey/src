@@ -58,6 +58,7 @@ $userdata->created = $ctx->miscService->formatDate($userdata->created);
 $userdata->lastlogin = $ctx->miscService->formatDate($userdata->lastlogin, true);
 $model->data = $userdata;
 $model->user = $user;
+$model->cheat = $ctx->cheatService->status($user->id);
 $model->data->rank = $ctx->userService->rank($userdata->solved);
 $model->tasks = $ctx->userService->solvedTasks($user->id);
 $model->authored = $ctx->tasksDao->find("author = '{$user->url}'");

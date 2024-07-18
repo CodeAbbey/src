@@ -50,6 +50,12 @@ if (!is_object($task)) {
 $userid = $ctx->auth->loggedUser();
 $userData = $ctx->userDataDao->findFirst("userid = $userid");
 
+if ($ctx->cheatService->isSuspended($userid)) {
+    $ctx->util->changePage('message');
+    $model->msg = 'Submission not accepted from this account';
+    return;
+}
+
 $ctx->util->sessionPut('last_subm', time());
 
 $res = $ctx->taskService->processSolution($task, $userid, $answer, $solution, $lang);

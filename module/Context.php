@@ -213,6 +213,10 @@ class Context extends \module\sys\ProtoContext {
         return new \module\service\CertService();
     }
 
+    protected function getCheatService() {
+        return new \module\service\CheatService();
+    }
+
     protected function getCommentService() {
         return new \module\service\CommentService();
     }

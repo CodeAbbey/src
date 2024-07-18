@@ -45,6 +45,7 @@ if ($ctx->auth->user()) {
     $user = $ctx->usersDao->findFirst("id = $userid");
     $userdata = $ctx->userdataDao->findFirst("userid = $userid");
     $usertasks = $ctx->userTasksDao->find("taskid = {$model->task->id} and userid = $userid");
+    $model->suspended = $ctx->cheatService->isSuspended($userid);
     $model->codes = array();
     foreach ($usertasks as $ut) {
         $model->codes[$ut->language] = url('task_solution', 'user', $user->url, 'task', $model->task->url, 'lang', urlencode($ut->language));
@@ -60,7 +61,7 @@ if ($ctx->auth->user()) {
 
     $ctx->elems->scripts[] = 'task/_view';
     $ctx->elems->scripts[] = '_ace/ace';
-
+    $ctx->elems->scripts[] = '_sql/sql-wasm';
 }
 
 if (!$userid) {

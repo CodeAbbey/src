@@ -23,7 +23,7 @@
 
         <p>Tasks solved: <?= $model->data->solved ?>
         <br/>of them for certificate: <?= count($model->c1tagged) ?>
-        <?php if (isset($model->data->cheatcnt) && $model->data->cheatcnt >= 10) : ?>
+        <?php if ($model->cheat->suspended) : ?>
             <br/>
             <span class="red strong">This account is suspended and under investigation for
                 suspicious activity / unsporting behavior.</span>
@@ -42,8 +42,8 @@
         <?php if ($ctx->auth->admin()) : ?>
             <p>Lid: <?= $model->user->loginid ?></p>
             <p>Failed: <?= $model->data->failed ?></p>
-            <p>Ccnt: <a href="<?= url('tools_cheatcnt', 'user', $model->user->url, 'cnt', $model->data->cheatcnt) ?>" target="_blank">
-                <?= $model->data->cheatcnt ?></a></p>
+            <p>Ccnt: <a href="<?= url('tools_cheatcnt', 'user', $model->user->url, 'cnt', $model->cheat->score) ?>" target="_blank">
+                <?= $model->cheat->score ?></a></p>
         <?php endif; ?>
 
         <p>
