@@ -11,7 +11,7 @@ $model->rank = $ctx->userService->topOfWeek();
 $taskIds = $ctx->tasksDao->findIds('shown <> 0');
 $taskIds = array_slice($taskIds, sizeof($taskIds) - 7);
 $taskIds = implode(',', $taskIds);
-$model->lastTasks = array_reverse($ctx->tasksDao->find("id in ($taskIds)"));
+$model->lastTasks = $taskIds ? array_reverse($ctx->tasksDao->find("id in ($taskIds)")) : [];
 
 $model->lastForum =
     array_slice($ctx->forumService->recentList(), 0, 5);
