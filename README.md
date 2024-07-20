@@ -1,7 +1,12 @@
 # CodeAbbey - opensource initiative
 
-It is a website with programming exercises. Started as **[https://www.codeabbey.com](https://www.codeabbey.com)**
-in September of 2013 it is now (as of summer 2024) moving to opensource, so that everyone can quickly setup
+It is a website with programming exercises - you can quickly deploy it on your own server (even free hosting) - and
+build something like **ProjectEuler** or **Rosalind.Info**. Actually, it is more powerful as problems you create
+will include data generator / checker code, so that users are every time provided with newly generated, random set
+of data (and of course, another answer is expected every time).
+
+This project started as **[https://www.codeabbey.com](https://www.codeabbey.com)**
+in September of 2013 and is now (as of summer 2024) moving to opensource, so that everyone can quickly setup
 similar website for personal coding puzzle collection, or for school, enterprise company needs (e.g. for
 interviewing, screening candidates).
 
@@ -27,13 +32,16 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 6 - userrank](https://github.com/CodeAbbey/src/tree/v0.6-userrank) - user profile and ranking pages.
 - [Step 7 - sync](https://github.com/CodeAbbey/src/tree/v0.7-sync) - no critical features added,
     mainly some improvements due to syncronizing codebase with existing website.
+- [Step 8 - customization](https://github.com/CodeAbbey/src/tree/v0.8-customization) minor tweaks and
+    rearrangements to help you customize the site elements (project name, title, author, fragments etc)
 
-### Step 7 - synchronization with main site
+### Step 8 - customization
 
-At previous steps a number of changes were made which made the code significantly diverge from the main site,
-which is inconvenient for further manipulations and support. So a kind of "sync-up" process was undertaken,
-which involved some changes and additions both in main site code and also here. All should work as on step 6,
-there are minor improvements to main page.
+This is very important thing for an opensource project - we want people to allow easily change some
+obvious things (like site caption, front look etc) - but provide compatibility with the original repo,
+so that their changes do not conflict with any technical updates which may be published later.
+
+Let's put directions on the basic steps for customization below, in the section after deployment options.
 
 ## How to run
 
@@ -73,3 +81,29 @@ inside and set up on your machine. It is not very difficult also and in some res
 Then copy files there and setup database. For managing database there should be `PHPMyAdmin`
 web tool in the LAMPP packet - make use of it and generally follow instructions for
 shared hosting given above.
+
+### Customization
+
+It is natural that after your deploy succeeds and you see the website running with joy, you may
+want to change its name, title and some general fragments. This is what we call "customization".
+What makes customization a bit tedious, is that you want to keep compatibility with the original
+sources, so that when "upstream" repository updates, you can update your site in as simple way as
+possible.
+
+This means that simply starting tweaking all files carelessly may be not exactly what you want -
+with the first update you'll inadvertently override half of your changes!
+
+We are trying to simplify this for you and by now this is achieved with the following:
+
+- you need not modify file `conf.php` in the root, instead just drop along it the similar file
+    named `cust_conf.php` and put your real secrets and settings here (feel free to remove all
+    lines that do not differ, these files are loaded one after another); of course you should
+    never commit your file with real secrets to any public repository etc!
+- find settings with project name, webpage general title, site author etc in the `conf.php` -
+    and update them to your taste and needs (of course, again do it in `cust_conf.php`).
+- if you want to replace some `fragments` files, just copy them with some new name (e.g.
+    copy `main_bottomnote.html` to `main_bottomextra.html`, then go to configuration file
+    and find array `custFrag`, put replacement here, e.g. `'main_bottomnote' => 'main_bottomextra'`,
+    then make any changes in this new fragment file instead; also you can use empty name if you
+    want some fragment to be removed (by default it happens to `adblock` fragment).
+

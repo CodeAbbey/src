@@ -1,4 +1,12 @@
 <?php
+/*
+PHP Markdown Lib
+Copyright (c) 2004-2022 Michel Fortin https://michelf.ca/
+Based on Markdown
+Copyright (c) 2003-2006 John Gruber https://daringfireball.net/
+License: https://github.com/michelf/php-markdown/blob/lib/License.md
+*/
+
 
 @define( 'MARKDOWN_VERSION',  "1.0.1q" ); # 11 Apr 2013
 @define( 'MARKDOWN_EMPTY_ELEMENT_SUFFIX',  " />");

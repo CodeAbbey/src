@@ -1,0 +1,6 @@
+<br/><strong>Latest problems</strong><br/>
+<?php foreach ($model->lastTasks as $task): ?>
+    <a href="<?= url('task_view', 'param', $task->url) ?>"><?= $task->title ?></a>
+    <span class="hint">#<?= $task->id ?></span><br/>
+<?php endforeach; ?>
+<br/>

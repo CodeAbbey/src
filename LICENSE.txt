@@ -1,0 +1,20 @@
+CodeAbbey License
+
+Copyright (c) 2013 Rodion Gorkovenko
+
+Permission is granted to run, study, share, modify this software,
+free of charge, to anyone, provided the following condition is met:
+
+1. The reference to original repository https://github.com/codeabbey/src
+    should be retained in unobscured way in user-facing interface (e.g.
+    link with words "based upon CodeAbbey sources" in the footer of every web-page)
+
+2. Redistributed copies and derived works should contain the above copyright
+    notice and the link to original repository https://github.com/codeabbey/src
+
+The motivation is that any end-user may in turn obtain the copy of the original
+software. No conditions on publishing any changes, improvements, additions in
+derived works are imposed.
+
+The software is provided "AS IS", with no warranty of any kind. Reusing it you
+agree that the author is not responsible for any effects due to its use or misuse.
