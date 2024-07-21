@@ -10,6 +10,8 @@ in September of 2013 and is now (as of summer 2024) moving to opensource, so tha
 similar website for personal coding puzzle collection, or for school, enterprise company needs (e.g. for
 interviewing, screening candidates).
 
+**Quick video-demo: [deploy CodeAbbey site at free web-hosting](https://www.youtube.com/watch?v=ayjzFg8T1eQ)**
+
 ## Instructions
 
 Here are two parts - one about how it works and another about how to run it. Consult them in any order according
