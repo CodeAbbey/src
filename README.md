@@ -27,21 +27,36 @@ by certain points (branches) in repository, as more and more functionality are a
     and functionality of registering users, login, logout is added.
 - [Step 3 - htaccess](https://github.com/CodeAbbey/src/tree/v0.3-htaccess) - about some important
     features which are configured outside PHP code
-- [Step 4 - tasks]() - pages for creating, editing, listing and viewing tasks.
+- [Step 4 - tasks](https://github.com/CodeAbbey/src/tree/v0.4-tasks) - pages for creating, editing,
+    listing and viewing tasks.
 - [Step 5 - submit](https://github.com/CodeAbbey/src/tree/v0.5-submit) - submission and checking.
 - [Step 6 - userrank](https://github.com/CodeAbbey/src/tree/v0.6-userrank) - user profile and ranking pages.
 - [Step 7 - sync](https://github.com/CodeAbbey/src/tree/v0.7-sync) - no critical features added,
     mainly some improvements due to syncronizing codebase with existing website.
 - [Step 8 - customization](https://github.com/CodeAbbey/src/tree/v0.8-customization) minor tweaks and
     rearrangements to help you customize the site elements (project name, title, author, fragments etc)
+- [Step 9 - task tags](https://github.com/CodeAbbey/src/tree/v0.9-tags) task tags and "volumes"
 
-### Step 8 - customization
+### Step 9 - Task Tags
 
-This is very important thing for an opensource project - we want people to allow easily change some
-obvious things (like site caption, front look etc) - but provide compatibility with the original repo,
-so that their changes do not conflict with any technical updates which may be published later.
+In the beginning the site used dedicated entities called "volumes" to aggregate problems - but at some point its
+limitations become obvious - for some problems seemingly may belong to several volumes and others were poorly fit
+to any (while creating new volume for single task looked ridiculous).
 
-Let's put directions on the basic steps for customization below, in the section after deployment options.
+So we switched to "tags" for problems - and it is "many-to-many" relations. Task list could be filtered by
+specific task. By default on creation each task gets "unlabeled" tag.
+
+Volumes in turn were gradually removed as it was difficult to maintain order in them while new problems were added.
+I remember this lead to some of our dear users being sad of their removal. Eventually similar feature was added
+in a form of few specific tags serving as names of volumes - they are set in config file - and shown as buttons
+above the task list.
+
+Exercises:
+
+- create some dummy task, make sure it gets "unlabeled" tag
+- find the "tags" link on task edit page - use it to reassign some other tags and remove "unlabeled"
+- feel free also to create new tags here
+- try modifying "volume" tags in configuration, make sure it works
 
 ## How to run
 

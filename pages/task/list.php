@@ -19,18 +19,10 @@ Already solved ones are at the bottom of the table.<br/>
     <?php if (empty($model->filterTag)) : ?>
         <a href="/index/wiki/volumes">Volume</a>:
         <div class="btn-group" role="group" aria-label="Task Volumes">
+            <?php foreach ($ctx->elems->conf->taskVolumes as $tag => $volume) : ?>
             <a class="btn btn-default"
-                href="<?=url('task_list', 'param', 'simple')?>">Simple</a>
-            <a class="btn btn-default"
-                href="<?=url('task_list', 'param', 'implementation')?>">
-                    Implementation</a>
-            <a class="btn btn-default"
-                href="<?=url('task_list', 'param', 'popular-algorithm')?>">
-                    Popular Algos</a>
-            <a class="btn btn-default"
-                href="<?=url('task_list', 'param', 'puzzle')?>">Puzzles</a>
-            <a class="btn btn-default"
-                href="<?=url('task_list', 'param', 'special')?>">Special</a>
+                href="<?=url('task_list', 'param', $tag)?>"><?= $volume ?></a>
+            <?php endforeach; ?>
         </div>
         &nbsp;&nbsp;&nbsp;
         <a class="btn btn-default"

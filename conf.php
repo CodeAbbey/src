@@ -22,6 +22,8 @@ $ctx->elems->conf->author = 'Rodion Gorkovenko';
 $ctx->elems->conf->mainImage = aurl('img/facade.gif');
 $ctx->elems->conf->copyright = '&copy; 2013 - ' . date('Y') . ', Rodion Gorkovenko';
 
+$ctx->elems->conf->taskVolumes = array('simple' => 'Simple', 'advanced' => 'Advanced', 'special' => 'Special');
+
 $ctx->elems->conf->custFrag = array(
     'adblock' => ''
 );
