@@ -1,16 +1,10 @@
 <ul class="nav navbar-nav">
 <li><a href="<?= url('main') ?>" title="Login and Main info">Home<?= $ctx->auth->loggedUser() === null ? ' / Login' : '' ?></a></li>
 <li><a href="<?= url('task_list') ?>" title="Programming problems list">Problems</a></li>
-<!--<li class="hidden-xs hidden-sm"><a href="<?= url('wiki', 'param', 'volumes') ?>" title="Exercises by categories">Volumes</a></li>-->
-<li><a href="/index/school">School</a></li>
 <li class="hidden-xs"><a href="<?= url('user_ranking') ?>" title="Programmer rating list">Ranking</a></li>
 <li><a href="<?= url('forum_view') ?>">Forum</a></li>
 <li class="hidden-xs"><a href="<?= url('wiki', 'param', 'help') ?>">Help</a></li>
 <li class="hidden-xs"><a href="<?= url('mess_hall') ?>">Mess</a></li>
-
-<?php if ($ctx->auth->admin()): ?>
-<li><a href="<?= url('user_list') ?>">Users</a></li>
-<?php endif; ?>
 </ul>
 
 <?php if ($ctx->auth->loggedUser() !== null): ?>

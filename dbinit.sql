@@ -147,6 +147,17 @@ create table pfx_challenges (
     index (userid)
 );
 
+drop table if exists pfx_wiki;
+create table pfx_wiki (
+    id int primary key auto_increment,
+    title varchar(120),
+    url varchar(120),
+    data text,
+    lastmod date default '2001-01-01',
+    index (title),
+    index (url)
+);
+
 drop view if exists pfx_userrank;
 create view pfx_userrank (id, username, url, solved, failed, points, rankpos, created, country, language, avatar) as
     select u.id, u.username, u.url, d.solved, d.failed, d.points, d.rankpos, d.created, d.country, d.language, d.avatar
@@ -172,4 +183,4 @@ create view pfx_userpoints as select pts.userid, pts.sumcost + coalesce(ch.sumco
 
 insert into pfx_tags (title) values ('unlabeled');
 insert into pfx_countries (code, title) values ('ZZ','Unknown');
-
+insert into pfx_wiki (title, url, data) values ('Help', 'help', 'VGhpcyBpcyBhIG1haW4gaGVscCBwYWdl');

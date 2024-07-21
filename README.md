@@ -36,27 +36,23 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 8 - customization](https://github.com/CodeAbbey/src/tree/v0.8-customization) minor tweaks and
     rearrangements to help you customize the site elements (project name, title, author, fragments etc)
 - [Step 9 - task tags](https://github.com/CodeAbbey/src/tree/v0.9-tags) task tags and "volumes"
+- [Step 10 - wiki](https://github.com/CodeAbbey/src/tree/v0.10-wiki) "wiki" pages support
 
-### Step 9 - Task Tags
+### Step 10 - Wiki
 
-In the beginning the site used dedicated entities called "volumes" to aggregate problems - but at some point its
-limitations become obvious - for some problems seemingly may belong to several volumes and others were poorly fit
-to any (while creating new volume for single task looked ridiculous).
+In many cases you may want to put some information on the site in the form of simple article -
+either some kind of technical help, Q&A, or extended explanations for some sort of tasks etc - for
+this we have functionality called "Wiki".
 
-So we switched to "tags" for problems - and it is "many-to-many" relations. Task list could be filtered by
-specific task. By default on creation each task gets "unlabeled" tag.
+It is not exactly like "Wikipedia" because it is only editable by admins (however you can easily modify this
+restriction if you want) - but let the name remain as it is pre-historic.
 
-Volumes in turn were gradually removed as it was difficult to maintain order in them while new problems were added.
-I remember this lead to some of our dear users being sad of their removal. Eventually similar feature was added
-in a form of few specific tags serving as names of volumes - they are set in config file - and shown as buttons
-above the task list.
+These articles are written using markdown format (so you may put some extended HTML and even JS here if you want).
+Admin has the small "Add new article" link above the text of any wiki page. If there are no pages, still `index/wiki`
+(without the trailing slash) leads to the list of all articles, which, even empty, would contain such a link.
 
-Exercises:
-
-- create some dummy task, make sure it gets "unlabeled" tag
-- find the "tags" link on task edit page - use it to reassign some other tags and remove "unlabeled"
-- feel free also to create new tags here
-- try modifying "volume" tags in configuration, make sure it works
+When putting links to wiki pages or from them to other parts of the site, it's advisable to use "semi-absolute" path,
+i.e. starting with root, like `/index/wiki/help`.
 
 ## How to run
 
