@@ -18,20 +18,12 @@ class Context extends \module\sys\ProtoContext {
         return new MysqlDao('roles');
     }
 
-    protected function getVolumesDao() {
-        return new MysqlDao('volumes');
-    }
-
     protected function getTasksDao() {
         return new \module\dao\TasksDao();
     }
 
     protected function getTaskListDao() {
         return new MysqlDao('tasklist');
-    }
-
-    protected function getTaskVolumesDao() {
-        return new MysqlDao('taskvolumes');
     }
 
     protected function getTaskDataDao() {
@@ -179,10 +171,6 @@ class Context extends \module\sys\ProtoContext {
 
     protected function getInteractService() {
         return new \module\service\InteractService();
-    }
-
-    protected function getVolumeService() {
-        return new \module\service\VolumeService();
     }
 
     protected function getUserService() {

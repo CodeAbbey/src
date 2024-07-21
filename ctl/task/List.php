@@ -30,17 +30,11 @@ if (!empty($param)) {
     if (is_object($tag)) {
         $tasks = $ctx->taskService->loadTasks($tag->id);
         $model->filterTag = $tag->title;
-        $volumes = array('simple'=>'Simple', 'implementation'=>'Implementation',
-            'puzzle'=>'Puzzles', 'popular-algorithm'=>'Popular Algorithms',
-            'special'=>'Special');
-        $model->volume = array_key_exists($tag->title, $volumes)
-            ? $volumes[$tag->title] : null;
+        $model->volume = $ctx->elems->conf->taskVolumes[$tag->title] ?? null;
     } else {
-        $volume = $ctx->volumesDao->findFirst("url = '$param'");
-        if (is_object($volume)) {
-            $model->title = $volume->title;
-            $tasks = $ctx->volumeService->loadTasks($volume->id);
-        }
+        $ctx->util->flash("No such tag");
+        $ctx->util->redirect('task_list');
+        return;
     }
 }
 if (empty($tasks)) {

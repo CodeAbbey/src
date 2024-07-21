@@ -3,22 +3,22 @@ function nameToUrl(s) {
 }
 
 function selectLanguage(s) {
-	var sel = $('select[name=lang]');
-	sel.find('option[selected]').prop('selected', null);
-	sel.find('option[value=' + s + ']').prop('selected', true);
-	sel.trigger('change');
+    var sel = $('select[name=lang]');
+    sel.find('option[selected]').prop('selected', null);
+    sel.find('option[value=' + s + ']').prop('selected', true);
+    sel.trigger('change');
 }
 
 $(function() {
     var flash = $('.flash-msg');
     if (flash.size() > 0) {
-        var adv = $(".advheader td:last");
+        var adv = $(".advheader .adv");
         adv.hide();
         flash.fadeIn(1000, function() {
-            flash.delay(3000).fadeOut(2000, function() {adv.show();});
+            flash.delay(7000).fadeOut(2000, function() {adv.show();});
         });
     }
-    
+
     $('.message-personal').click(function() {
         var elem = $(this);
         var ur = confirm('Remove this Reminder?');
@@ -28,7 +28,7 @@ $(function() {
             elem.hide();
         }
     });
-    
+
     $('a.click-to-see').click(function() {
         $(this).closest('.hider').find('.hidden').removeClass('hidden');
         $(this).parent().hide();
@@ -46,7 +46,7 @@ $(function() {
         }
         return txt;
     }
-    
+
     function twoDigits(v) {
         var s = '00' + v;
         if (s.length > 2) {
@@ -54,7 +54,7 @@ $(function() {
         }
         return s;
     }
-    
+
     function serverRunDisable() {
         $('input[id^=run]').attr('disabled', 'true').css('color', '#999');
         $('#no-run-warn').removeClass('hidden');
@@ -84,7 +84,7 @@ $(function() {
             setInterval(clockTick, 300);
             return;
         }
-        var time = parseFloat($clock.attr('data-time')); 
+        var time = parseFloat($clock.attr('data-time'));
         var diff = Math.floor(new Date().getTime() / 1000) - parseFloat($clock.attr('data-gen'));
         time = (time + diff) % (24 * 60 * 60);
         var secs = twoDigits(time % 60);
@@ -94,11 +94,11 @@ $(function() {
         var hours = twoDigits(time);
         $clock.text(hours + ':' + mins + ':' + secs);
     }
-    
+
     if (typeof(noServerRun) != 'undefined') {
         serverRunDisable()
     }
-    
+
     clockTick(true);
 
     colorLocaleLinks();
@@ -228,7 +228,7 @@ $(function() {
             createGhost();
         }
     });
-    
+
     function initGhost() {
         if (ghostFlying !== null) {
             flyGhost();
@@ -239,7 +239,7 @@ $(function() {
         }
         createGhost();
     }
-    
+
     function createGhost() {
         var srcs = ['ghost1', 'ghost2', 'ghost3', 'bunny1', 'bunny2'];
         var src = srcs[Math.floor(Math.random() * srcs.length)];
@@ -265,7 +265,7 @@ $(function() {
         ghostFlying.fadeIn(Math.floor(ghostTt / 4));
         requestAnimationFrame(flyGhost);
     }
-    
+
     function flyGhost() {
         var dt = new Date().getTime() - ghostTs;
         if (dt > ghostTt) {
