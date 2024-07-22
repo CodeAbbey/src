@@ -32,5 +32,5 @@ $ctx->elems->conf->passwordSalt = 'salt#cadabraabra';
 $ctx->elems->conf->emailSalt = 'salt#racadabraab';
 
 $ctx->elems->conf->calcPointsSecret = null;
-
+$ctx->elems->conf->viewSolutionSecret = 'baracada';
 ?>

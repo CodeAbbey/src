@@ -21,7 +21,8 @@ if (!$currentUserId && !$key) {
 }
 
 $ts = $key ? substr($key, 24) : base_convert(time(), 10, 16);
-$h = substr(hash('sha256', "$ts+$taskurl+$userurl+$language"), 0, 24);
+$toHash = "{$ctx->elems->conf->viewSolutionSecret}+$ts+$taskurl+$userurl+$language";
+$h = substr(hash('sha256', $toHash), 0, 24);
 if ($key) {
     $tsd = base_convert($ts, 16, 10);
     if ($h . $ts != $key || $tsd < time() - 86400*7) {
@@ -30,7 +31,6 @@ if ($key) {
         return;
     }
 }
-
 
 $task = $ctx->tasksDao->findFirst("url = '$taskurl'");
 $user = $ctx->usersDao->findFirst("url = '$userurl'");
@@ -60,15 +60,8 @@ if ($ctx->challengeService->challengeExists($task->id)
     return;
 }
 
-$model->solution = $ctx->taskService->viewSolution($task, $user, $language);
+$model->solution = $ctx->taskService->viewSolution($task, $user, $language, $key !== null);
 
-$model->commentAllowed = ($currentUserId != $user->id);
-if ($model->solution->error || !$ctx->userService->commentingAllowed()
-        || $ctx->commentService->commentExists('sol', $model->solution->userTaskId, $currentUserId)) {
-    $model->commentAllowed = false;
-}
-
-$model->replyAllowed = ($currentUserId === $user->id);
 $model->changeLangAllowed = ($currentUserId === $user->id || $ctx->auth->admin());
 
 $model->highlight = (!empty($model->solution->language) && $model->solution->language != 'other')
@@ -77,19 +70,6 @@ $model->highlight = (!empty($model->solution->language) && $model->solution->lan
 if ($model->changeLangAllowed && !$model->solution->error) {
     $model->language = strtolower($model->solution->language);
     $model->languages = $ctx->langService->languagesArray();
-}
-
-if (!$model->solution->error) {
-    $userTaskId = $model->solution->userTaskId;
-    $model->comments = $ctx->commentService->listComments('sol', $userTaskId);
-    if ($currentUserId != $user->id && !$key) {
-        $model->codelike = $ctx->codelikesDao->getCount("userid = $currentUserId and codeid = $userTaskId");
-    } else {
-        $model->codelike = 1;
-    }
-} else {
-    $model->comments = array();
-    $model->codelike = 0;
 }
 
 $ctx->elems->styles[] = 'jqui';

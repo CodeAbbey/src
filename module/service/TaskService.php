@@ -326,9 +326,9 @@ class TaskService extends \stdClass {
         return $task->author == $user->url;
     }
 
-    function viewSolution($task, $user, $language) {
+    function viewSolution($task, $user, $language, $nocheck) {
 
-        $data = $this->viewSolutionLoadAndCheck($task, $user, $language);
+        $data = $this->viewSolutionLoadAndCheck($task, $user, $language, $nocheck);
 
         $res = new \stdClass();
         $res->taskTitle = $task->title;
@@ -348,7 +348,7 @@ class TaskService extends \stdClass {
         return $res;
     }
 
-    private function viewSolutionLoadAndCheck($task, $user, $language) {
+    private function viewSolutionLoadAndCheck($task, $user, $language, $nocheck) {
         $ctx = $this->ctx;
         $taskid = $task->id;
         $userid = $user->id;
@@ -357,13 +357,13 @@ class TaskService extends \stdClass {
         $currentUser = $ctx->auth->loggedUser();
         $nosolview = $ctx->miscService->getTaggedValue("nosol-$taskid");
         $ownerOrAdmin = ($currentUser == $userid || $ctx->auth->admin());
-        if ($nosolview && !$ownerOrAdmin) {
+        if ($nosolview && !$ownerOrAdmin && !$nocheck) {
             $data['error'] = "Sorry, for this task solutions are hidden "
                 . "due to conspiracy!";
             return $data;
         }
 
-        if (!$this->viewSolutionCheckAllowed($task, $user, $currentUser)) {
+        if (!$nocheck && !$this->viewSolutionCheckAllowed($task, $user, $currentUser)) {
             $data['error'] = "Please, solve this task yourself first\n    "
                 . "then you will be able to see other's solutions!";
             return $data;
@@ -404,7 +404,7 @@ class TaskService extends \stdClass {
     }
 
     private function viewSolutionCheckAllowed($task, $userid, $currentUser) {
-        if ($this->ctx->auth->admin() || $user->id == $currentUser) {
+        if ($this->ctx->auth->admin() || $userid == $currentUser) {
             return true;
         }
         $viewer = $this->ctx->usersDao->read($currentUser);

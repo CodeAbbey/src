@@ -39,22 +39,19 @@ by certain points (branches) in repository, as more and more functionality are a
     rearrangements to help you customize the site elements (project name, title, author, fragments etc)
 - [Step 9 - task tags](https://github.com/CodeAbbey/src/tree/v0.9-tags) task tags and "volumes"
 - [Step 10 - wiki](https://github.com/CodeAbbey/src/tree/v0.10-wiki) "wiki" pages support
+- [Step 11 - solvers](https://github.com/CodeAbbey/src/tree/v0.11-solvers) about viewing solutions
 
-### Step 10 - Wiki
+### Step 11 - Solvers and Solutions viewing
 
-In many cases you may want to put some information on the site in the form of simple article -
-either some kind of technical help, Q&A, or extended explanations for some sort of tasks etc - for
-this we have functionality called "Wiki".
+Here we add previously skipped files which allow to see list of people who solved the specific problem
+and also the page to view solutions itself. Surprisingly this logic is pretty confusing due to various conditions
+when allow or not allow to see solutions so here could be still mistakes or duplications (some were fixed now):
 
-It is not exactly like "Wikipedia" because it is only editable by admins (however you can easily modify this
-restriction if you want) - but let the name remain as it is pre-historic.
-
-These articles are written using markdown format (so you may put some extended HTML and even JS here if you want).
-Admin has the small "Add new article" link above the text of any wiki page. If there are no pages, still `index/wiki`
-(without the trailing slash) leads to the list of all articles, which, even empty, would contain such a link.
-
-When putting links to wiki pages or from them to other parts of the site, it's advisable to use "semi-absolute" path,
-i.e. starting with root, like `/index/wiki/help`.
+- to see solution one should solve the given task before
+- thus user needs to be logged in
+- solutions to challenges could not be seen though
+- solution owner and admin can see solution anyway
+- there is an opportunity to see solution by shareable link in 1 week period (no login required, no checks)
 
 ## How to run
 
