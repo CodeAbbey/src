@@ -78,20 +78,20 @@ class MiscService extends \stdClass {
     }
 
     function setTaggedValue($tag, $val) {
-        $record = $this->ctx->tagValsDao->findFirst("tag = '$tag'");
+        $record = $this->ctx->tagValDao->findFirst("tag = '$tag'");
         if (!is_object($record)) {
             $record = new \stdClass();
             $record->tag = $tag;
         } else if ($val === null) {
-            $this->ctx->tagValsDao->delete($record->id);
+            $this->ctx->tagValDao->delete($record->id);
             return;
         }
         $record->val = base64_encode(serialize($val));
-        $this->ctx->tagValsDao->save($record);
+        $this->ctx->tagValDao->save($record);
     }
 
     function getTaggedValue($tag) {
-        $record = $this->ctx->tagValsDao->findFirst("tag = '$tag'");
+        $record = $this->ctx->tagValDao->findFirst("tag = '$tag'");
         if (!is_object($record)) {
             return null;
         }
@@ -99,7 +99,7 @@ class MiscService extends \stdClass {
     }
 
     function getTaggedValues($prefix) {
-        $records = $this->ctx->tagValsDao->find("tag like '$prefix%'");
+        $records = $this->ctx->tagValDao->find("tag like '$prefix%'");
         $res = array();
         foreach ($records as $rec) {
             $res[$rec->tag] = unserialize(base64_decode($rec->val));

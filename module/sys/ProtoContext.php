@@ -6,10 +6,19 @@ class ProtoContext extends \stdClass {
 
     function __get($name) {
         $methodName = 'get' . ucfirst($name);
-        if (!method_exists($this, $methodName)) {
-            throw new \Exception("No property '$name' in Context!");
+        if (method_exists($this, $methodName)) {
+            $res = $this->$methodName();
+        } else {
+            if (substr($name, -7) == 'Service') {
+                $fullname = "\\module\\service\\" . ucfirst($name);
+                $res = new $fullname();
+            } elseif (substr($name, -3) == 'Dao') {
+                $res = new \module\dao\MysqlDao(strtolower(substr($name, 0, -3)));
+            } else {
+                $fullname = "\\module\\lib\\" . ucfirst($name);
+                $res = new $fullname();
+            }
         }
-        $res = $this->$methodName();
         if (is_object($res)) {
             $res->ctx = $this;
         }

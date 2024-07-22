@@ -48,7 +48,7 @@ class MsgService extends \stdClass {
 
     function getAllPersonal() {
         $ctx = $this->ctx;
-        $records = $ctx->tagValsDao->find("tag like 'msg-%'");
+        $records = $ctx->tagValDao->find("tag like 'msg-%'");
         $users = array();
         foreach ($records as $rec) {
             $userid = substr($rec->tag, 4);
