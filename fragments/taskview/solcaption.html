@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-xs-9">
+        <div class="row">
+        <span class="strong col-xs-4">Your solution:</span>
+        </div>
+        <div class="hint">Note: it is not checked automatically, it is saved so you
+            can later reuse your code in other problems.<br/>
+            You can write <strong>in any language you want</strong>.
+            For some of them we have built-in tools (see buttons below on right).</div>
+    </div>
+    <div id="languageLabel" class="col-xs-3 centered">
+        <div>Select Language:</div>
+        <select name="lang" class="form-control centered">
+            <option value="">Autodetect</option>
+            <?php foreach ($model->languages as $langKey => $langVal) : ?>
+            <option value="<?= $langKey ?>"><?= $langVal ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>

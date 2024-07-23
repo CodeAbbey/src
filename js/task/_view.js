@@ -2,14 +2,14 @@ $(function() {
 
     var langSelect = $("select[name=lang]");
     var taskid = $('input[name=taskid]').val();
-    
+
     solutionArea = ace.edit('ace-editor');
     solutionArea.setShowPrintMargin(false);
     solutionArea.setFontSize(16);
     solutionArea.getSession().setUseWorker(false);
-    
-    setInterval(autoLangDetector, 3000);
-    
+
+    window.autoLangDetectorTimer = setInterval(autoLangDetector, 3000);
+
     hideAnswerAndInputIfNecessary();
 
     setTimeout(restoreLastSolution, 300);
@@ -20,7 +20,7 @@ $(function() {
         $("#solution").val(src);
         return src;
     }
-    
+
     function autoLangDetector() {
         var lang = langSelect.val();
         var src = solutionArea.getValue();
@@ -33,19 +33,19 @@ $(function() {
         var lang = languageDetector.detect(src);
         selectLanguageForDetected(lang);
     }
-    
+
     function selectLanguage(sel) {
         langSelect.val(sel);
         switchEditorLanguage();
     }
-    
+
     function selectLanguageForDetected(lang) {
         var opt = langSelect.find('option').filter(function() {
             return $(this).html() == lang;
         });
         selectLanguage(opt.val());
     }
-    
+
     function switchEditorLanguage() {
         var lang = langSelect.val();
         switch (lang) {
@@ -69,9 +69,9 @@ $(function() {
         }
         solutionArea.getSession().setMode("ace/mode/" + lang);
     }
-    
+
     langSelect.change(switchEditorLanguage);
-    
+
     $("input[type=submit]").click(function() {
         var taskid = $('input[name=taskid]').val();
         var answer = $("#answer").val();
@@ -122,7 +122,7 @@ $(function() {
         }
         return true;
     });
-    
+
     function restoreLastSolution() {
         var obj = null;
         var data = localStorage['task-' + taskid + '-src'];
@@ -143,7 +143,7 @@ $(function() {
         langSelect.val(obj.lang);
         switchEditorLanguage();
     }
-    
+
     $("a.load-code").click(function() {
         var url = $(this).attr('href');
         var lang = url.replace(/.*lang\=/, '').replace('+', ' ');
@@ -157,7 +157,7 @@ $(function() {
         });
         return false;
     });
-    
+
     function gears() {
         var ans = $("#answer");
         var s = ans.val();
@@ -181,7 +181,7 @@ $(function() {
         $("#solution").val(src);
         return {"code": src, "input": input, "lang": lang};
     }
-    
+
     function localRun(lang, sel) {
         if (sel) selectLanguage(sel);
         var data = inputSrcData(lang);
@@ -195,7 +195,7 @@ $(function() {
             alert(e.message);
         }
     }
-    
+
     function remoteRun(lang, sel) {
         if (sel) selectLanguage(sel);
         var data = inputSrcData(lang);
@@ -220,7 +220,7 @@ $(function() {
             alert(e.message);
         }
     }
-    
+
     $("#run-any").click(function() {
         var opts = {
             'c/c++': 'cpp',
@@ -258,7 +258,7 @@ $(function() {
     $("#run-python").click(function() {
         remoteRun('py', "python");
     });
-    
+
     $("#run-cpp").click(function() {
         remoteRun('cpp', "c/c++");
     });
@@ -266,15 +266,15 @@ $(function() {
     $("#run-c").click(function() {
         remoteRun('c', "c/c++");
     });
-    
+
     $("#run-java").click(function() {
         remoteRun('java', "java");
     });
-    
+
     $("#run-cs").click(function() {
         remoteRun('cs', "c#");
     });
-    
+
     $("#run-perl").click(function() {
         remoteRun('pl', "perl");
     });
@@ -294,11 +294,11 @@ $(function() {
     $("#run-scala").click(function() {
         remoteRun(15, "scala");
     });
-    
+
     $("#run-php").click(function() {
         remoteRun(7, "php");
     });
-    
+
     $("#run-go").click(function() {
         remoteRun(21, "go");
     });
@@ -306,7 +306,7 @@ $(function() {
     $("#run-regexp").click(function() {
         localRun('re', "regexp");
     });
-    
+
     $("#run-brainfuck").click(function() {
         localRun('bf', "brainfuck");
     });
@@ -322,7 +322,7 @@ $(function() {
     $("#run-i4004").click(function() {
         localRun('i4004', "asm4004");
     });
-    
+
     $("#run-javascript").click(function() {
         selectLanguage("javascript");
         var src = prepareRun();

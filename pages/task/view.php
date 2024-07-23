@@ -102,40 +102,7 @@
 <div><span class="strong">Your answer:</span> <span class="hint">paste here an answer from your program</span></div>
 <div><input id="answer" name="answer" type="text" value="" class="form-control"/></div><br/>
 
-<div class="row">
-    <div class="col-xs-9">
-        <div class="row">
-        <span class="strong col-xs-4">Your solution:</span>
-        <span class="col-xs-8"><span class="red">Please <b>do not</b></span> post it to github (and other public sites)
-            <a target="_blank" href="<?= url('wiki', 'param', 'storing-solutions') ?>">WHY???</a></span>
-            <span class="col-xs-4"></span><span class="col-xs-8">
-                <span class="red">Also <b>do not</b></span> copy other's code, please! 
-                Your progress could be reset for cheating :(</span>
-        </div>
-        <?php if (!empty($model->codes)) : ?>
-            You already have sources (click to load, or right-click and copy url):
-            <?php foreach ($model->codes as $lang => $sourceUrl) : ?>
-                &nbsp;&nbsp;<a class="load-code" href="<?= $sourceUrl ?>"><?= $lang ?></a>
-            <?php endforeach; ?>
-            <br/>
-        <?php endif; ?>
-        <div class="hint">Note: it is not checked automatically, it is saved so you
-            can later reuse your code in other problems.<br/>
-            You can write <strong>in any language you want</strong>.
-            For some of them we have built-in tools (see buttons below on right).</div>
-    </div>
-    <div id="languageLabel" class="col-xs-3 centered">
-        <div>Select Language:</div>
-        <select name="lang" class="form-control centered">
-            <option value="">Autodetect</option>
-            <?php foreach ($model->languages as $langKey => $langVal) : ?>
-            <option value="<?= $langKey ?>"><?= $langVal ?></option>
-            <?php endforeach; ?>
-        </select>
-        <input type="button" id="run-any" class="btn btn-success form-control"
-            value="Run it!" title="button suggested by Alena S"/>
-    </div>
-</div>
+<?= $ctx->util->fragment('taskview_solcaption') ?>
 
 <input type="hidden" name="b64enc" id="b64enc" value="0"/>
 <textarea name="solution" id="solution" class="hidden"></textarea>
@@ -150,55 +117,8 @@
         Sorry, account is suspended for investigation and submissions are not allowed temporarily.
         <?php endif; ?>
     </div>
-
-    <div class="col-xs-5">
-        <table id="code-tools" class="centered full-width" style="border:1px solid #888">
-            <tr><td colspan="3">
-                    <span class="strong">Code Running Tools</span><br/>
-                    <span class="strong red hidden" id="no-run-warn">
-                        This problem could not be run on server<br/>
-                        please run locally and copy-paste result and code<br/></span>
-                    <a href="<?= url('wiki', 'param', 'running') ?>" target="_blank">How to run your solution?</a>
-            </td></tr>
-            <tr>
-                <td>
-                    <input type="button" id="run-python" value="Python" title="Pypy3"/><br/>
-                    <input type="button" id="run-cpp" value="C++" title="Gnu (g++)"/><br/>
-                    <input type="button" id="run-c" value="C (not ++)" title="Gnu GCC"/><br/>
-                    <input type="button" id="run-java" value="Java" title="OpenJDK 16"/><br/>
-                    <input type="button" id="run-cs" value="C#" title="Mono C# 6.8"/><br/>
-                    <input type="button" id="run-perl" value="Perl" title="Perl 5"/><br/>
-                    <input type="button" id="run-lua" value="Lua" title="Lua 5.3"/><br/>
-                    <!--<input type="button" id="run-scala" value="Scala"/><br/>
-                    <input type="button" id="run-php" value="PHP"/><br/>
-                    <input type="button" id="run-go" value="Go"/><br/>
-                    <input type="button" id="run-perl" value="Perl"/><br/>-->
-                    <span class="hint">run in "sandbox"</span>
-                    <br/>
-                </td>
-                <td>
-                    <input type="button" id="run-brainfuck" value="Brainf**k"/><br/>
-                    <input type="button" id="run-basic" value="Basic"/><br/>
-                    <input type="button" id="run-turing" value="Turing"/><br/>
-                    <input type="button" id="run-i4004" value="Asm i4004"/><br/>
-                    <input type="button" id="run-regexp" value="RegExp"/><br/>
-                    <input type="button" id="run-scheme" value="Scheme" title="TinyScheme-R7"/><br/>
-                    <input type="button" id="run-forth" value="Forth" title="pForth"/><br/>
-                    <span class="hint">interpreted</span>
-                </td>
-                <td>
-                    <input type="button" id="run-javascript" value="JavaScript" title="Read from 'input()', write to 'output(...)'"/><br/>
-                    <input type="button" id="run-sql" value="SQLite"/>
-                    <br/>
-                    <span class="hint">in browser</span>
-                    <br/><br/>
-                    <span class="strong">Web Compilers</span><br/>
-                    <a href="http://ideone.com" target="_blank">IdeOne.com</a><br/>
-                    <a href="http://codepad.org" target="_blank">CodePad.org</a>
-                </td>
-            </tr>
-        </table>
-    </div>
+    
+    <?= $ctx->util->fragment('taskview_runtools') ?>
 </div>
 </form>
 
