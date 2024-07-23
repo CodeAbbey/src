@@ -27,7 +27,7 @@ $(function() {
         if (src.trim) {
             localStorage['task-' + taskid + '-src'] = JSON.stringify({lang:lang, text:src});
         }
-        if (lang || src.length < 26 || src.match(/\n/g).length < 3) {
+        if (lang || src.length < 26 || (src.match(/\n/g) ?? '').length < 3) {
             return;
         }
         var lang = languageDetector.detect(src);
