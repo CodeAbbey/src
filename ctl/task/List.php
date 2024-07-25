@@ -14,7 +14,7 @@ if (!in_array($sort, array('tre1', 'num1', 'id1', 'num0', 'id0'))) {
     if ($ctx->auth->loggedUser()) {
         $sort = $ctx->util->sessionGet('task-list-sort');
     }
-    $sort = empty($sort) ? 'tre1' : $sort;
+    $sort = empty($sort) ? $ctx->elems->conf->defTaskSort : $sort;
 } else {
     if ($ctx->auth->loggedUser()) {
         $ctx->util->sessionPut('task-list-sort', $sort);

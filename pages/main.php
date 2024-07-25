@@ -1,9 +1,6 @@
 <div class="row">
     <div class="col-md-8 col-sm-12 centered">
-        <div class="strong">
-            <br/>We believe that three things lead to success:<br/>
-                Practice, Practice and Practice!
-        </div>
+        <div class="strong"><br/><?= $ctx->elems->conf->motto ?></div>
         <h1 class="centered">
             <a href="https://www.codeabbey.com" class="link-image">
                 <img class="full-width" src="<?= $ctx->elems->conf->mainImage ?>"
