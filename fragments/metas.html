@@ -1,4 +1,7 @@
-<meta name="description" content="<?= $ctx->miscService->formatDescription() ?>">
 <meta name="author" content="<?= $ctx->elems->conf->author ?>">
-<meta name="robots" content="<?= $ctx->elems->get('robots', 'index,follow') ?>">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<?php $metaRobots=$ctx->elems->get('robots', 'index,follow'); ?>
+<meta name="robots" content="<?= $metaRobots ?>">
+<?php if (isset($ctx->elems->conf->canonical) && strpos($metaRobots, 'noindex') === false): ?>
+    <link rel="canonical" href="<?= $ctx->elems->conf->canonical . $_SERVER['REQUEST_URI'] ?>"/>
+<?php endif; ?>
