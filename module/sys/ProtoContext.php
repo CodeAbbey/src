@@ -10,7 +10,9 @@ class ProtoContext extends \stdClass {
             $res = $this->$methodName();
         } else {
             if (substr($name, -7) == 'Service') {
-                $fullname = "\\module\\service\\" . ucfirst($name);
+                $name = ucfirst($name);
+                $name = $this->elems->conf->custSvc[$name] ?? $name;
+                $fullname = "\\module\\service\\$name";
                 $res = new $fullname();
             } elseif (substr($name, -3) == 'Dao') {
                 $res = new \module\dao\MysqlDao(strtolower(substr($name, 0, -3)));
