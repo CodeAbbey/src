@@ -237,5 +237,6 @@ create view pfx_chatview (id, userid, username, userurl, solved, created, messag
 insert into pfx_tags (title) values ('unlabeled');
 insert into pfx_countries (code, title) values ('ZZ','Unknown');
 insert into pfx_wiki (title, url, data) values ('Help', 'help', 'VGhpcyBpcyBhIG1haW4gaGVscCBwYWdl');
-insert into pfx_forums (title, url, minlevel) values ('General discussions', 'general', 5);
+insert into pfx_forums (title, url, minlevel, info) values ('General discussions', 'general', 5,
+    'V3JpdGUgd2hhdGV2ZXIgaXMgb24geW91ciBtaW5kLCBqdXN0IGJlIHBvbGl0ZSwgcGxlYXNlIDopCg==');
 
