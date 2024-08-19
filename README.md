@@ -44,30 +44,40 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 10 - wiki](https://github.com/CodeAbbey/src/tree/v0.10-wiki) "wiki" pages support
 - [Step 11 - solvers](https://github.com/CodeAbbey/src/tree/v0.11-solvers) about viewing solutions
 - [Step 12 - customization-2](https://github.com/CodeAbbey/src/tree/v0.12-cust2) more configuration, and mess-hall working
+- [Step 13 - forum](https://github.com/CodeAbbey/src/tree/v0.13-forum) well, forum files and tables are added here
 
-### Step 12 - Customization and Mess hall
+### Step 13 - Forum files and tables
 
-With this update we get more internal improvements and customization-related features. Of visible
-changes here comes working "Mess Hall" page (though I'm not 100% satifsfied with the name - historically
-it was intended to serve as a chat). Make sure to add few new tables to the database
-(`chat` and `chat_view`) from `initdb.sql` file.
+With this update we include files which provide forums functionality. Note that database uses `3` tables
+for forums - add them to your existing installation if you upgrade from previous steps. These tables
+are called `forums`, `topics` and `posts`. Each topic consists of the sequence of posts - and on the other
+side every post belongs to one of several forums (in this context every "forum" is rather a "section" of the
+global forum).
 
-Besides this:
+At least it was initial model used in CodeAbbey.
 
-- context file was much simplified for now it loads services and libraries files guessing by their
-    name, so they need not be listed in the code;
-- files `js/custom.js` and `css/custom.css` are recognized now - here you can put your additions
-    (and overridings) to the javascript and stylesheets, rather than modify existing files;
-- default task list order is customized and could be selected by `defTaskSort` field in config;
-- motto on main page also now comes from the configuration;
-- provision for customizing `services` - now if you need to modify one, simply add another file
-    along existing and make it a child (e.g. `LoginServiceExt extends LoginService`), then add
-    mapping to configuration `...custSvc['LoginService'=>'LoginServiceExt']` so that new file is
-    loaded first and loads original one automatically as a parent - override or add functions there;
-- country detection probably should work (happens on user's registration) - but we need yet a tool for
-    updating `data/db-ip.txt` file sometimes;
-- user actions (visible in mess-hall) may be logged to file if the name is configured in `logging` field
-    instead of `false`.
+With the time it become obvious there is not so many activity and multiple forum sections are not really
+necessary and may be sometimes even confusing (at this specific website). So they were slighty modified
+to work in a "single-forum mode". Actually these all (five) forums remained there but their list of
+topics is combined and new posts always go into "general" forum.
+
+In this opensource solution we add configuration option `singleForum` (defaults to `false`) which controls
+how forums operate.
+
+**Exercises**
+
+- add tables and files, login as admin and create some post;
+- add new section (i.e. another record to `forums` table) - regretfully for this there is no
+    web-interface yet, you'll need to do this directly in database;
+- add record to this new subforum; try adding records as simple user (you'll need to deal with
+    problem solving limit set for every forum);
+- switch the `singleForum` option to `true`, investigate how forum look changes, find the old
+    `forum_main` page and make sure all dedicated subforums still exist
+- figure out how topics could be moved between forums (admin's feature).
+
+As an extra exercise think of what functionality may be necessary for managing forums - e.g. page for adding
+new sections, removing sections (probably they should be empty?) editing data there. Feel free to propose
+pages for them or try making them yourself and create pull-requests.
 
 ## How to run
 

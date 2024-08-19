@@ -147,6 +147,42 @@ create table pfx_challenges (
     index (userid)
 );
 
+drop table if exists pfx_forums;
+create table pfx_forums (
+    id int primary key auto_increment,
+    title varchar(250),
+    info text,
+    url varchar(250),
+    minlevel int default 5,
+    index (url)
+);
+
+drop table if exists pfx_forumtopics;
+create table pfx_forumtopics (
+    id int primary key auto_increment,
+    forumid int,
+    userid int,
+    taskid int default 0,
+    title varchar(250),
+    url varchar(250),
+    posts int default 0,
+    created timestamp default current_timestamp,
+    lastpost timestamp,
+    lastpostid int,
+    index (forumid),
+    index (url)
+);
+
+drop table if exists pfx_forumposts;
+create table pfx_forumposts (
+    id int primary key auto_increment,
+    topicid int,
+    userid int,
+    created timestamp default current_timestamp,
+    post text,
+    index (topicid)
+);
+
 drop table if exists pfx_wiki;
 create table pfx_wiki (
     id int primary key auto_increment,
@@ -201,3 +237,5 @@ create view pfx_chatview (id, userid, username, userurl, solved, created, messag
 insert into pfx_tags (title) values ('unlabeled');
 insert into pfx_countries (code, title) values ('ZZ','Unknown');
 insert into pfx_wiki (title, url, data) values ('Help', 'help', 'VGhpcyBpcyBhIG1haW4gaGVscCBwYWdl');
+insert into pfx_forums (title, url, minlevel) values ('General discussions', 'general', 5);
+

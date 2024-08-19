@@ -1,0 +1,106 @@
+<style>
+.CodeMirror {
+    width: 900px;
+    margin: 5px auto;
+    text-align: left;
+}
+</style>
+<form id="posting" method="post" action="<?= url(empty($model->postText) ? 'forum_post' : 'forum_update') ?>" class="full-width centered forum-form">
+
+    <input type="hidden" name="url" value="<?= !empty($model->topic) ? $model->topic->url : (!empty($model->forum) ? $model->forum->url : $model->url) ?>"/>
+
+    <?php if (!empty($model->newTopic)) : ?>
+    <br/>
+    <div class="row">
+        <span class="col-xs-10 col-xs-offset-1 form-group">
+            <input type="text" name="topictitle" class="form-control" placeholder="New Topic Title" maxlength="100"/>
+        </span>
+    </div>
+    <div class="row">
+        <span class="col-xs-6 col-xs-offset-3 form-group">
+            <label id="for-task">Private for Task #
+                <input type="text" name="task" maxlength="5" class="form-control centered" placeholder="or leave empty"/>
+            </label>
+    </div>
+    <br/>
+    <script>
+    $('input[name=topictitle]').change(function() {
+        var input = $(this);
+        var text = input.val();
+        text = text.replace(/[^A-Za-z0-9\-\_\s\(\)\[\]\?]/g, '');
+        text = text.replace(/\s+/g, ' ');
+        input.val(text);
+    });
+    </script>
+    <?php endif; ?>
+
+    <a href="<?= url('wiki', 'param', 'markdown') ?>" target="_blank">Please read: Help on Formatting</a>
+    <div>Characters left: <span id="chars-left"></span></div>
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1">
+            <textarea id="text" name="text" class="forum-post" style="height:200px;" placeholder="Enter your post here" maxlength="5000"><?= !empty($model->postText) ? $model->postText : '' ?></textarea><br/>
+        </div>
+    </div>
+
+    <input type="submit" class="btn btn-default" value="Post"/>
+
+</form>
+
+<script>
+function checkPostingValid() {
+    var title = $('#posting input[name=topictitle]').val();
+    var text = $('#posting textarea[name=text]').val();
+    if (typeof(title) != 'undefined') {
+        if (10 > title.length || title.length > 100) {
+            alert('Topic title should be 10 ... 100 characters long!');
+            return false;
+        }
+    }
+    if (20 > text.length || text.length > 5000) {
+        alert('Post text should be 20 ... 5000 characters long!');
+        return false;
+    }
+    return true;
+}
+
+$(function() {
+    
+    var textArea = $("#text");
+    var limit = parseInt(textArea.attr('maxlength'));
+    var charsLeft = $('#chars-left');
+
+    var editor = CodeMirror.fromTextArea($("#text").get(0), {
+        lineNumbers: true,
+        mode: "markdown",
+        indentUnit: 4,
+        indentWithTabs: true,
+        enterMode: "keep",
+        tabMode: "shift"
+    });
+
+    var onChange = function(cm, change) {
+        var left = limit - cm.getValue().length;
+        charsLeft.text(left);
+        if (left < 0) {
+            charsLeft.parent().addClass('red');
+        } else {
+            charsLeft.parent().removeClass('red');
+        }
+    }
+
+    editor.on("change", onChange);
+    onChange(editor, {});
+    
+    $("input[type=submit]").click(function() {
+        textArea.val(editor.getValue());
+        if (!checkPostingValid()) {
+            return false;
+        }
+        return true;
+    });
+});
+
+</script>
+
+<br/>
+
