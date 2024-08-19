@@ -208,7 +208,7 @@ class UserService extends \stdClass {
     }
 
     function personalInfoAllowed() {
-        return $this->levelAllowed(25);
+        return $this->levelAllowed($this->ctx->elems->conf->personalInfoLevel);
     }
 
     function messAllowed() {
@@ -220,7 +220,7 @@ class UserService extends \stdClass {
     }
 
     function shortNameAllowed() {
-        return $this->levelAllowed(125);
+        return $this->levelAllowed($this->ctx->elems->conf->nameChangeLevel);
     }
 
     function levelAllowed($level) {

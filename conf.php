@@ -24,11 +24,14 @@ $ctx->elems->conf->motto = 'We believe in three things, which lead to success:<b
 $ctx->elems->conf->copyright = '&copy; 2013 - ' . date('Y') . ', Rodion Gorkovenko';
 $ctx->elems->conf->defTaskSort = 'id1';
 $ctx->elems->conf->singleForum = false;
+$ctx->elems->conf->nameChangeLevel = 125;
+$ctx->elems->conf->personalInfoLevel = 25;
 
 $ctx->elems->conf->taskVolumes = array('simple' => 'Simple', 'advanced' => 'Advanced', 'special' => 'Special');
 
 $ctx->elems->conf->custFrag = array(
-    'adblock' => ''
+    'adblock' => '',
+    'user_extraconfig' => '',
 );
 
 $ctx->elems->conf->custSvc = array(

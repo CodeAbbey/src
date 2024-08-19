@@ -45,39 +45,22 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 11 - solvers](https://github.com/CodeAbbey/src/tree/v0.11-solvers) about viewing solutions
 - [Step 12 - customization-2](https://github.com/CodeAbbey/src/tree/v0.12-cust2) more configuration, and mess-hall working
 - [Step 13 - forum](https://github.com/CodeAbbey/src/tree/v0.13-forum) well, forum files and tables are added here
+- [Step 14 - profile](https://github.com/CodeAbbey/src/tree/v0.14-profile) files for user profile settings added
 
-### Step 13 - Forum files and tables
+### Step 14 - User profile settings
 
-With this update we include files which provide forums functionality. Note that database uses `3` tables
-for forums - add them to your existing installation if you upgrade from previous steps. These tables
-are called `forums`, `topics` and `posts`. Each topic consists of the sequence of posts - and on the other
-side every post belongs to one of several forums (in this context every "forum" is rather a "section" of the
-global forum).
-
-At least it was initial model used in CodeAbbey.
-
-With the time it become obvious there is not so many activity and multiple forum sections are not really
-necessary and may be sometimes even confusing (at this specific website). So they were slighty modified
-to work in a "single-forum mode". Actually these all (five) forums remained there but their list of
-topics is combined and new posts always go into "general" forum.
-
-In this opensource solution we add configuration option `singleForum` (defaults to `false`) which controls
-how forums operate.
+We show user profile page already but we hadn't controls to change data there - password, email, personal
+info and username. With this update all this comes. You may note that there is a single configuration
+page but its various buttons lead to several endpoints, each of them do not provide separate page, but
+updates data, shows flash message and redirects to user profile.
 
 **Exercises**
 
-- add tables and files, login as admin and create some post;
-- add new section (i.e. another record to `forums` table) - regretfully for this there is no
-    web-interface yet, you'll need to do this directly in database;
-- add record to this new subforum; try adding records as simple user (you'll need to deal with
-    problem solving limit set for every forum);
-- switch the `singleForum` option to `true`, investigate how forum look changes, find the old
-    `forum_main` page and make sure all dedicated subforums still exist
-- figure out how topics could be moved between forums (admin's feature).
+Try to update name, personal info, password and email. You'll notice you need to change "levels" which
+allow changing name and personal info. Find them in `conf.php`.
 
-As an extra exercise think of what functionality may be necessary for managing forums - e.g. page for adding
-new sections, removing sections (probably they should be empty?) editing data there. Feel free to propose
-pages for them or try making them yourself and create pull-requests.
+When changing name you may see queer message that name is already taken (though name is changed). Investigate
+it and propose some fix. (for now it's a small bug)
 
 ## How to run
 
