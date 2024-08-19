@@ -4,10 +4,6 @@ namespace module\service;
 
 class LoginService extends \stdClass {
 
-    function __construct() {
-        global $ctx;
-    }
-
     function login($username, $password, $hashed = true) {
         $ctx = $this->ctx;
         if ($hashed) {
@@ -34,7 +30,7 @@ class LoginService extends \stdClass {
         if (empty($userdata->country)) {
             $userdata->country = $country;
         }
-        $lang = $_SERVER['HTTP_ACCEPT_LANGUAGE']; 
+        $lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         $ctx->userDataDao->save($userdata);
         $ctx->miscService->logAction($userid, "login $remoteAddress $country $lang");
         $ctx->miscService->postToMessHall($userid, "I've just logged in...");
@@ -52,8 +48,41 @@ class LoginService extends \stdClass {
     }
 
     function detectCountry($ip) {
-        // skip logic for now
-        return 'ZZ';
+        $ip = trim($ip);
+        $lines = file_get_contents('./data/db-ip.txt');
+        if (!preg_match('/\d+\.\d+\.\d+\.\d+/', $ip) || $lines === false) {
+            return 'ZZ';
+        }
+        $ip = explode('.', $ip);
+        $res = 0;
+        foreach ($ip as $d) {
+            $res = $res * 256 + $d;
+        }
+        $lines = explode("\n", $lines);
+        $min = 0;
+        $max = count($lines) - 1;
+        while ($min < $max) {
+            $mid = floor(($min + $max + 1) / 2);
+            $line = explode(' ', $lines[$mid]);
+            $start = floatval(base_convert($line[0], 36, 10));
+            if ($start > $res) {
+                $max = $mid - 1;
+            } else {
+                $min = $mid;
+            }
+        }
+        $line = explode(' ', $lines[$min]);
+        $from = floatval(base_convert($line[0], 36, 10));
+        $till = $from + floatval(base_convert($line[1], 36, 10));
+        return ($res >= $from && $res <= $till) ? $line[2] : 'ZZ';
+    }
+
+    function githubLoginUrl() {
+        return '#';
+    }
+
+    function googleLoginUrl() {
+        return '#';
     }
 
     function hashPassword($pwd) {
@@ -66,13 +95,4 @@ class LoginService extends \stdClass {
         $tail = preg_replace('/^[^\@]+/', '', $email);
         return $email[0] . '*' . substr($h, 0, 8) . $tail;
     }
-
-    function githubLoginUrl() {
-        return '#';
-    }
-
-    function googleLoginUrl() {
-        return '#';
-    }
-
 }

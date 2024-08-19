@@ -158,6 +158,16 @@ create table pfx_wiki (
     index (url)
 );
 
+drop table if exists pfx_chat;
+create table pfx_chat (
+    id bigint primary key auto_increment,
+    userid int,
+    created timestamp default current_timestamp,
+    message text,
+    index (userid),
+    index (created)
+);
+
 drop view if exists pfx_userrank;
 create view pfx_userrank (id, username, url, solved, failed, points, rankpos, created, country, language, avatar) as
     select u.id, u.username, u.url, d.solved, d.failed, d.points, d.rankpos, d.created, d.country, d.language, d.avatar
@@ -180,6 +190,13 @@ drop view if exists pfx_userpoints;
 create view pfx_userpoints as select pts.userid, pts.sumcost + coalesce(ch.sumcost, 0) as sumcost
     from pfx_userpointstask pts left join pfx_userpointschlng ch using(userid)
     order by sumcost desc;
+
+drop view if exists pfx_chatview;
+create view pfx_chatview (id, userid, username, userurl, solved, created, message, avatar) as
+    select c.id, c.userid, u.username, u.url, d.solved, c.created, c.message, d.avatar
+    from pfx_chat c join pfx_users u on c.userid = u.id left join pfx_userdata d on c.userid = d.userid
+    where c.created > (now() - interval 1 day)
+    order by c.created desc;
 
 insert into pfx_tags (title) values ('unlabeled');
 insert into pfx_countries (code, title) values ('ZZ','Unknown');

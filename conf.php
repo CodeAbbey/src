@@ -33,6 +33,8 @@ $ctx->elems->conf->custFrag = array(
 $ctx->elems->conf->custSvc = array(
 );
 
+$ctx->elems->conf->logging = array('activity' => false);
+
 $ctx->elems->conf->passwordSalt = 'salt#cadabraabra';
 $ctx->elems->conf->emailSalt = 'salt#racadabraab';
 

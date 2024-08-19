@@ -23,6 +23,8 @@ class Elems extends \stdClass {
         $this->scripts = [];
         $this->conf = new \stdClass();
         $this->conf->custFrag = [];
+        $this->conf->custSvc = [];
+        $this->conf->logging = [];
         $this->modules = array();
         $this->moduleOrder = array();
         $this->errors = array();

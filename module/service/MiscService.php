@@ -5,7 +5,18 @@ namespace module\service;
 class MiscService extends \stdClass {
 
     function countryNameByCode($code) {
-        return $code;
+        if (!$code) {
+            return null;
+        }
+        $country = $this->ctx->countriesDao->findFirst("code = '$code'");
+        if (is_object($country)) {
+            return $country->title;
+        }
+        return null;
+    }
+
+    function curTimeStr() {
+        return date('Y-m-d H:i:s');
     }
 
     function formatDate($ts, $withTime = false) {
@@ -41,13 +52,25 @@ class MiscService extends \stdClass {
         header('Last-Modified: ' . date("D, d M Y H:i:s", $time) . ' GMT');
     }
 
-    function listIds(&$arr, $field, $imploded = true) {
-        $res = $this->summarize($arr, $field);
-        $res = array_keys($res);
-        if ($imploded) {
-            $res = implode(',', $res);
+    function postToMessHall($userid, $message) {
+        $record = new \stdClass();
+        $record->userid = $userid;
+        $record->created = date('Y-m-d H:i:s');
+        $record->message = base64_encode($message);
+        $this->ctx->chatDao->save($record);
+    }
+
+    function logAction($userid, $message) {
+        $date = date('Ymd-His');
+        if (!empty($userid)) {
+            $user = $this->ctx->usersDao->read($userid);
+            $url = $user->url;
+        } else {
+            $url = '-null-';
         }
-        return $res;
+        $logName = $this->ctx->elems->conf->logging['activity'] ?? false;
+        if ($logName)
+            error_log("$date $url $message\n", 3, $logName);
     }
 
     function summarize(&$arr, $field) {
@@ -63,11 +86,20 @@ class MiscService extends \stdClass {
         return $res;
     }
 
+    function listIds(&$arr, $field, $imploded = true) {
+        $res = $this->summarize($arr, $field);
+        $res = array_keys($res);
+        if ($imploded) {
+            $res = implode(',', $res);
+        }
+        return $res;
+    }
+
     function validUrlParam($url) {
         return $url === null || preg_match('/^[a-z0-9\-\_]+$/', $url);
     }
 
-    function validUrlParams($args) {
+    function validUrlParams() {
         $args = func_get_args();
         foreach ($args as $a) {
             if (!$a || !$this->validUrlParam($a)) {
@@ -75,6 +107,14 @@ class MiscService extends \stdClass {
             }
         }
         return true;
+    }
+
+    function encryptInt($value) {
+        return sprintf("%12d", $value);
+    }
+
+    function decryptInt($cipher) {
+        return intval($cipher);
     }
 
     function setTaggedValue($tag, $val) {
@@ -107,10 +147,15 @@ class MiscService extends \stdClass {
         return $res;
     }
 
-    function postToMessHall($userid, $message) {
-    }
-
-    function logAction($userid, $message) {
+    function isMobile() {
+        $aMobileUA = array('/iphone/i' => 'iPhone', '/ipod/i' => 'iPod', '/ipad/i' => 'iPad',
+            '/android/i' => 'Android', '/blackberry/i' => 'BlackBerry', '/webos/i' => 'Mobile');
+        foreach($aMobileUA as $sMobileKey => $sMobileOS){
+            if(preg_match($sMobileKey, $_SERVER['HTTP_USER_AGENT'])){
+                return true;
+            }
+        }
+        return false;
     }
 
     function calcPoints() {

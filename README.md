@@ -43,18 +43,31 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 9 - task tags](https://github.com/CodeAbbey/src/tree/v0.9-tags) task tags and "volumes"
 - [Step 10 - wiki](https://github.com/CodeAbbey/src/tree/v0.10-wiki) "wiki" pages support
 - [Step 11 - solvers](https://github.com/CodeAbbey/src/tree/v0.11-solvers) about viewing solutions
+- [Step 12 - customization-2](https://github.com/CodeAbbey/src/tree/v0.12-cust2) more configuration, and mess-hall working
 
-### Step 11 - Solvers and Solutions viewing
+### Step 12 - Customization and Mess hall
 
-Here we add previously skipped files which allow to see list of people who solved the specific problem
-and also the page to view solutions itself. Surprisingly this logic is pretty confusing due to various conditions
-when allow or not allow to see solutions so here could be still mistakes or duplications (some were fixed now):
+With this update we get more internal improvements and customization-related features. Of visible
+changes here comes working "Mess Hall" page (though I'm not 100% satifsfied with the name - historically
+it was intended to serve as a chat). Make sure to add few new tables to the database
+(`chat` and `chat_view`) from `initdb.sql` file.
 
-- to see solution one should solve the given task before
-- thus user needs to be logged in
-- solutions to challenges could not be seen though
-- solution owner and admin can see solution anyway
-- there is an opportunity to see solution by shareable link in 1 week period (no login required, no checks)
+Besides this:
+
+- context file was much simplified for now it loads services and libraries files guessing by their
+    name, so they need not be listed in the code;
+- files `js/custom.js` and `css/custom.css` are recognized now - here you can put your additions
+    (and overridings) to the javascript and stylesheets, rather than modify existing files;
+- default task list order is customized and could be selected by `defTaskSort` field in config;
+- motto on main page also now comes from the configuration;
+- provision for customizing `services` - now if you need to modify one, simply add another file
+    along existing and make it a child (e.g. `LoginServiceExt extends LoginService`), then add
+    mapping to configuration `...custSvc['LoginService'=>'LoginServiceExt']` so that new file is
+    loaded first and loads original one automatically as a parent - override or add functions there;
+- country detection probably should work (happens on user's registration) - but we need yet a tool for
+    updating `data/db-ip.txt` file sometimes;
+- user actions (visible in mess-hall) may be logged to file if the name is configured in `logging` field
+    instead of `false`.
 
 ## How to run
 
