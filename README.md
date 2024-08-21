@@ -46,21 +46,34 @@ by certain points (branches) in repository, as more and more functionality are a
 - [Step 12 - customization-2](https://github.com/CodeAbbey/src/tree/v0.12-cust2) more configuration, and mess-hall working
 - [Step 13 - forum](https://github.com/CodeAbbey/src/tree/v0.13-forum) well, forum files and tables are added here
 - [Step 14 - profile](https://github.com/CodeAbbey/src/tree/v0.14-profile) files for user profile settings added
+- [Step 15 - langs](https://github.com/CodeAbbey/src/tree/v0.15-langs) languages list customization
 
-### Step 14 - User profile settings
+### Step 15 - Languages list customization
 
-We show user profile page already but we hadn't controls to change data there - password, email, personal
-info and username. With this update all this comes. You may note that there is a single configuration
-page but its various buttons lead to several endpoints, each of them do not provide separate page, but
-updates data, shows flash message and redirects to user profile.
+This is a small but somewhat painful piece :) During the lifetime of CodeAbbey the list of languages (used to mark solutions, primarily) have grown - some languages there are pretty specific
+to the site (e.g. `Asm4004` and `SQLite`), others may be so rare you won't like to include them
+in your site.
 
-**Exercises**
+Now the list lives also in `conf.php` under the name of `$ctx->elems->conf->languages` - it is
+a "key-value" list (or associative array) where values are how the language is named in user 
+interface, while keys - how they are called in the database etc. For many languages these match
+but sometimes it's preferable that the key doesn't use special characters etc.
 
-Try to update name, personal info, password and email. You'll notice you need to change "levels" which
-allow changing name and personal info. Find them in `conf.php`.
+There is another use for these languages, almost absent (yet) in opensource version - it is about
+running the code in the chosen language in user's interface. For most of languages this requires
+sending the code from browser to server and then either executing them here (e.g. it is a situation
+with `BASIC` or `RegExp` which are actually executed by `PHP` interpreter), or sending further
+to "sandbox" server. Some could be instead executed in-browser. Of such the only one is present
+for now - javascript. As a exercise (somewhat advanced and not 5-minutes work) you may try to
+attach some python interpreter implemented in javascript (perhaps, brython) - or other more
+lightweight language - and create here button for it.
 
-When changing name you may see queer message that name is already taken (though name is changed). Investigate
-it and propose some fix. (for now it's a small bug)
+Functionality to run sources in sandbox is absent now mainly for the reason that setting up a
+sandbox server is a separate matter (and unlike main site it couldn't run on free hosting) - but
+if you inspect code on main CodeAbbey website you'll see how requests are sent to dedicated
+controller. You can either implement something here yourself or ask me for further guidance about
+creating sandbox. But I recommend not doing this until you feel the most of main functionality is
+sturdy enough and your site is steaming well :)
 
 ## How to run
 

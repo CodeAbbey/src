@@ -182,7 +182,7 @@ $(function() {
         return {"code": src, "input": input, "lang": lang};
     }
 
-    function localRun(lang, sel) {
+    window.localRun = function(lang, sel) {
         if (sel) selectLanguage(sel);
         var data = inputSrcData(lang);
         var toolsLocalRun = tools + '_localrun';
@@ -194,9 +194,9 @@ $(function() {
         } catch (e) {
             alert(e.message);
         }
-    }
+    };
 
-    function remoteRun(lang, sel) {
+    window.remoteRun = function(lang, sel) {
         if (sel) selectLanguage(sel);
         var data = inputSrcData(lang);
         var sandboxPath = tools + '_sandbox';
@@ -219,27 +219,10 @@ $(function() {
         } catch (e) {
             alert(e.message);
         }
-    }
+    };
 
     $("#run-any").click(function() {
-        var opts = {
-            'c/c++': 'cpp',
-            'python': 'py',
-            'java': 'java',
-            'c#': 'cs',
-            'perl': 'pl',
-            'lua': 'lua',
-            'scheme': 'scm',
-            'forth': 'fth',
-            'php': 'php',
-            'regex': '!re',
-            'brainfuck': '!bf',
-            'turing': '!turing',
-            'basic': '!basic',
-            'asm4004': '!i4004',
-            'javascript': '#',
-            'sql': '#',
-        };
+        var opts = executorsForRunButton;
         var lang = langSelect.val();
         var runner = opts[lang];
         if (typeof(runner) == 'undefined') {
@@ -255,75 +238,7 @@ $(function() {
         }
     });
 
-    $("#run-python").click(function() {
-        remoteRun('py', "python");
-    });
-
-    $("#run-cpp").click(function() {
-        remoteRun('cpp', "c/c++");
-    });
-
-    $("#run-c").click(function() {
-        remoteRun('c', "c/c++");
-    });
-
-    $("#run-java").click(function() {
-        remoteRun('java', "java");
-    });
-
-    $("#run-cs").click(function() {
-        remoteRun('cs', "c#");
-    });
-
-    $("#run-perl").click(function() {
-        remoteRun('pl', "perl");
-    });
-
-    $("#run-lua").click(function() {
-        remoteRun('lua', "lua");
-    });
-
-    $("#run-scheme").click(function() {
-        remoteRun('scm', "scheme");
-    });
-
-    $("#run-forth").click(function() {
-        remoteRun('fth', "forth");
-    });
-
-    $("#run-scala").click(function() {
-        remoteRun(15, "scala");
-    });
-
-    $("#run-php").click(function() {
-        remoteRun(7, "php");
-    });
-
-    $("#run-go").click(function() {
-        remoteRun(21, "go");
-    });
-
-    $("#run-regexp").click(function() {
-        localRun('re', "regexp");
-    });
-
-    $("#run-brainfuck").click(function() {
-        localRun('bf', "brainfuck");
-    });
-
-    $("#run-turing").click(function() {
-        localRun('turing', "turing");
-    });
-
-    $("#run-basic").click(function() {
-        localRun('basic', "basic");
-    });
-
-    $("#run-i4004").click(function() {
-        localRun('i4004', "asm4004");
-    });
-
-    $("#run-javascript").click(function() {
+    window.runJavaScript = function() {
         selectLanguage("javascript");
         var src = prepareRun();
         try {
@@ -334,44 +249,8 @@ $(function() {
             alert(e.message);
         }
         inputHolder = null;
-    });
+    };
 
-    $("#run-sql").click(function() {
-        selectLanguage("sql");
-        ans = $('#answer');
-        var sqlRun = () => {
-            ans.val('');
-            var db = new sqlite.Database();
-            var text = $('#test-data').val() + ';' + solutionArea.getValue()
-            var stmts = text.split(';');
-            for (var i = 0; i < stmts.length; i++) {
-                var line = stmts[i].replace(/^\s+/, '');
-                try {
-                    if (line.substr(0, 6).toLowerCase() != 'select') {
-                        db.run(line);
-                    } else {
-                        var st = db.prepare(line);
-                        while (st.step()) {
-                            var row = st.get();
-                            ans.val(ans.val() + row.join(',') + ' ');
-                        }
-                    }
-                } catch (e) {
-                    ans.val('Probably syntax error');
-                }
-            }
-        };
-        if (typeof(sqlite) == 'undefined') {
-            ans.val('initializing...');
-            initSqlJs({locateFile: (x) => '/js/_sql/' + x})
-                .then((s) => {
-                    window.sqlite = s;
-                    sqlRun();
-                });
-        } else {
-            sqlRun();
-        }
-    });
 });
 
 var inputHolder = null;

@@ -39,6 +39,9 @@ $ctx->elems->conf->custSvc = array(
 
 $ctx->elems->conf->logging = array('activity' => false);
 
+$ctx->elems->conf->languages = array("c/c++" => "C/C++", "python" => "Python", "go" => "Go",
+    "java" => "Java", "c#" => "C#", "javascript" => "JavaScript", "other" => "Other");
+
 $ctx->elems->conf->passwordSalt = 'salt#cadabraabra';
 $ctx->elems->conf->emailSalt = 'salt#racadabraab';
 

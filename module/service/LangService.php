@@ -55,19 +55,9 @@ class LangService extends \stdClass {
     }
 
     function languagesArray() {
-        return ["c/c++" => "C/C++", "python" => "Python", "java" => "Java",
-            "c#" => "C#", "ruby" => "Ruby", "php" => "PHP",
-            "javascript" => "JavaScript", "perl" => "Perl", "lisp" => "LISP",
-            "vb" => "VB", "lua" => "Lua", "brainfuck" => "Brainfuck",
-            "scala" => "Scala", "f#" => "F#", "d" => "D", "go" => "Go",
-            "haskell" => "Haskell", "ocaml" => "Ocaml", "julia" => "Julia",
-            "ada" => "Ada", "rust" => "Rust", "swift" => "Swift", "shell" => "Shell",
-            "pascal" => "Pascal", "r" => "R", "matlab" => "Matlab", "vala" => "Vala",
-            "fortran" => "Fortran", "scheme" => "Scheme", "basic" => "BASIC",
-            "forth" => "Forth", "turing" => "Turing Machine", "regexp" => "RegExp",
-            "asm4004" => "Asm4004", "sql" => "SQL", "other" => "Other"];
+        return $this->ctx->elems->conf->languages;
     }
-    
+
     function preferredLanguage($userid) {
         $table = $this->ctx->userTasksDao->languagesCount($userid);
         $res = '';
@@ -80,7 +70,7 @@ class LangService extends \stdClass {
         }
         return $res;
     }
-    
+
     function preferredLanguageUpdate($userid) {
         $lang = $this->preferredLanguage($userid);
         $data = $this->ctx->userDataDao->findFirst("userid = $userid");
@@ -88,7 +78,7 @@ class LangService extends \stdClass {
         $this->ctx->userDataDao->save($data);
         return $lang;
     }
-    
+
     function checkAndFixLanguage($language) {
         $languages = $this->languagesArray();
         if (isset($languages[$language])) {
@@ -98,20 +88,20 @@ class LangService extends \stdClass {
         }
         return null;
     }
-    
+
     function changeLanguage($task, $user, &$oldLang, &$language, $confirm, $model) {
         $language = $this->checkAndFixLanguage($language);
         $oldLang = $this->checkAndFixLanguage($oldLang);
         if ($oldLang === null || $language === null) {
             return array(0, "Unknown error");
         }
-        
+
         $userTaskOld = $this->ctx->userTasksDao->findFirst("taskid = {$task->id} and userid = {$user->id} and language = '$oldLang'");
         $userTaskNew = $this->ctx->userTasksDao->findFirst("taskid = {$task->id} and userid = {$user->id} and language = '$language'");
         if (!is_object($userTaskOld)) {
             return array(0, 'Solution missed');
         }
-        
+
         if ($confirm) {
             $this->doChangeLanguage($userTaskOld, $userTaskNew, $task->url, $user->url, $language);
             return array(2, 'Language successfully changed');
@@ -120,7 +110,7 @@ class LangService extends \stdClass {
             return array(1);
         }
     }
-    
+
     private function doChangeLanguage($userTaskOld, $userTaskNew, $taskurl, $userurl, $language) {
         $ctx = $this->ctx;
         if (is_object($userTaskNew)) {
@@ -133,7 +123,7 @@ class LangService extends \stdClass {
             $this->deleteDuplicateSolution($userTaskOld, $userTaskNew);
         }
     }
-    
+
     private function deleteDuplicateSolution($userTaskOld, $userTaskNew) {
         $ctx = $this->ctx;
         $votes = $ctx->codelikesDao->find("codeid = {$userTaskNew->id}");
@@ -143,7 +133,7 @@ class LangService extends \stdClass {
         }
         $ctx->userTasksDao->delete($userTaskNew->id);
     }
-    
+
     private function prepareConfirmation($task, $user, $oldlang, $language, $overwrite, $model) {
         $model->task = $task;
         $model->username = $user->username;
