@@ -1,6 +1,6 @@
 <div class="row advheader wiki-header">
   <div class="col-md-7">
-    <h1>CodeAbbey Forum</h1>
+    <h1><?= $ctx->elems->conf->projectName ?> Forum</h1>
   </div>
   <?= $ctx->util->fragment('adblock') ?>
 </div>

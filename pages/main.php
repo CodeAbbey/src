@@ -1,12 +1,7 @@
 <div class="row">
     <div class="col-md-8 col-sm-12 centered">
         <div class="strong"><br/><?= $ctx->elems->conf->motto ?></div>
-        <h1 class="centered">
-            <a href="https://www.codeabbey.com" class="link-image">
-                <img class="full-width" src="<?= $ctx->elems->conf->mainImage ?>"
-                    alt="<?= $ctx->elems->conf->projectName ?>"/>
-            </a>
-        </h1>
+        <?= $ctx->util->fragment('main_image') ?>
         <div class="visible-sm visible-xs centered">
             <?= $ctx->util->fragment('main_login') ?>
         </div>

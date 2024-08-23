@@ -8,9 +8,9 @@
 <div class="row">
 
 <div class="col-xs-9">
-    <div class="strong">Here you can see what is going on at CodeAbbey</div>
+    <div class="strong">Here you can see what is going on at <?= $ctx->elems->conf->projectName ?></div>
     <br/>
-    
+
     <table class="table table-hover table-condensed">
     <?php foreach ($model->records as $rec) : ?>
     <tr>
