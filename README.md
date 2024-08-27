@@ -12,8 +12,10 @@ interviewing, screening candidates).
 
 **Quick video-demo: [deploy CodeAbbey site at free web-hosting](https://www.youtube.com/watch?v=ayjzFg8T1eQ)**
 
-For proof-testing we also started another site based on this sources - dedicated to exercises in Physics:  
-**[Alferov's Peace](https://alferovs-peace.sourceforge.net)**
+For proof-testing we also started a couple other site based on these sources:
+
+- collection of industrial-oriented problems (from interviews etc): **[Ca4pro.com](https://ca4pro.com)**
+- dedicated to exercises in Physics: **[Alferov's Peace](https://alferovs-peace.sourceforge.net)**
 
 ## Instructions
 
