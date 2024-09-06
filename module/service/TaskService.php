@@ -34,7 +34,7 @@ class TaskService extends \stdClass {
         return $tasks;
     }
 
-    private function executeChecker($code, $expected = null, $answer = null, $solution = null) {
+    private function executeChecker($code, $expected = null, $answer = null, $solution = null, $lang = null) {
         if (substr($code, 0, 7) === '#python') {
             $ver = substr($code, 1, 7);
             return $this->executePyChecker($code, $ver, $expected, $answer);
@@ -50,10 +50,10 @@ class TaskService extends \stdClass {
             $result = checker();
         } else {
             $checkerReflection = new \ReflectionFunction('checker');
-            if ($checkerReflection->getNumberOfParameters() == 2) {
-                $result = checker($expected, $answer);
-            } else {
-                $result = checker($expected, $answer, $solution);
+            switch ($checkerReflection->getNumberOfParameters()) {
+                case 3: $result = checker($expected, $answer, $solution); break;
+                case 4: $result = checker($expected, $answer, $solution, $lang); break;
+                default: $result = checker($expected, $answer); break;
             }
         }
         return $result;
@@ -171,14 +171,14 @@ class TaskService extends \stdClass {
         return $notes;
     }
 
-    function verifyAnswer($taskid, $answer, $solution, $userid) {
+    function verifyAnswer($taskid, $answer, $solution, $userid, $lang) {
         $expected = $this->ctx->util->sessionGet("expected-answer-$taskid");
         if ($expected === null) {
             return false;
         }
 
         if (in_array(substr($expected, 0, 5), array('#php ', '#pyx '))) {
-            return $this->verifyWithChecker($taskid, $expected, $answer, $solution, $userid);
+            return $this->verifyWithChecker($taskid, $expected, $answer, $solution, $userid, $lang);
         }
 
         if (substr($expected, 0, 2) != "' ") {
@@ -194,9 +194,9 @@ class TaskService extends \stdClass {
         return $expected == $answer;
     }
 
-    private function verifyWithChecker($taskid, $expected, $answer, $solution, $userid) {
+    private function verifyWithChecker($taskid, $expected, $answer, $solution, $userid, $lang) {
         $code = $this->loadChecker($taskid);
-        $result = $this->executeChecker($code, $expected, $answer, $solution);
+        $result = $this->executeChecker($code, $expected, $answer, $solution, $lang);
         $this->ctx->util->sessionPut("expected-answer-$taskid", $result);
         $ok = preg_match('/^ok(\s.*)?$/', $result);
         if ($ok && $this->ctx->challengeService->challengeExists($taskid)) {
@@ -252,7 +252,7 @@ class TaskService extends \stdClass {
         if (empty($language)) {
             $language = $this->ctx->langService->detectLanguage($solution);
         }
-        $solved = $this->ctx->taskService->verifyAnswer($taskid, $answer, $solution, $userid);
+        $solved = $this->ctx->taskService->verifyAnswer($taskid, $answer, $solution, $userid, $language);
         $solCount = $this->ctx->userTasksDao->getCount("userid = $userid and taskid = $taskid and solved > 0");
         $prevSolved = $solCount > 0;
         return array($solved, $prevSolved, $language);
