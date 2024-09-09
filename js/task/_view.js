@@ -1,7 +1,8 @@
 $(function() {
 
-    var langSelect = $("select[name=lang]");
+    var langSelect = $('select[name=lang]');
     var taskid = $('input[name=taskid]').val();
+    var submitBtn = $('input[type=submit]');
 
     solutionArea = ace.edit('ace-editor');
     solutionArea.setShowPrintMargin(false);
@@ -11,8 +12,18 @@ $(function() {
     window.autoLangDetectorTimer = setInterval(autoLangDetector, 3000);
 
     hideAnswerAndInputIfNecessary();
+    loadInputData();
 
     setTimeout(restoreLastSolution, 300);
+
+    function loadInputData() {
+        var textarea = $('#test-data');
+        if (textarea.length) {
+            textarea.val('(preparing input data...)');
+            $.get('/index.php?page=task_preparedata&param=' + taskid,
+                function(data) { textarea.val(data); });
+        }
+    }
 
     function prepareRun() {
         $("#answer").val('');
@@ -72,8 +83,9 @@ $(function() {
 
     langSelect.change(switchEditorLanguage);
 
-    $("input[type=submit]").click(function() {
-        var taskid = $('input[name=taskid]').val();
+    $(submitBtn).click(function() {
+        submitBtn.attr('disabled', 1);
+        setTimeout(function() { submitBtn.attr('disabled', null)}, 2000);
         var answer = $("#answer").val();
         var src = solutionArea.getValue();
         if (langSelect.val() == '') {
@@ -120,8 +132,42 @@ $(function() {
                 return false;
             }
         }
-        return true;
+        var data = JSON.stringify({taskid:taskid, answer:answer,
+            solution:sol64, b64enc:1, lang:langSelect.val()});
+        $.post('/index.php?page=task_attempt2', data,
+            badAttemptModal, 'text');
+        $('#attempt-result').hide(0);
+        $('#attempt-msg').html('Please, kindly wait a bit...');
+        $('#attemptModal').modal();
+        return false;
     });
+
+    function badAttemptModal(res) {
+        setTimeout(loadInputData, 300);
+        res = JSON.parse(res);
+        if (res.msg) {
+            $('#attempt-msg').html(res.msg);
+            return;
+        }
+        if (res.solved) {
+            delete res.submittedAnswer;
+            delete res.inputData;
+            var obj = btoa(JSON.stringify(res));
+            var inp = $('<input/>').attr(
+                {type: 'hidden', name: 'obj', value: obj});
+            var form = $('<form id="succ-submitter"/>').attr(
+                {action: '/index.php?page=task_success', method: 'post'})
+                .append(inp).appendTo($('body'));
+            $('#succ-submitter').submit();
+            return;
+        }
+        $('#attempt-msg').html('Slightly incorrect yet... :)<br/><br/>');
+        $('#attempt-result').show(0);
+        $('#attempt-expected').val(res.answer);
+        $('#attempt-answer').val(atob(res.submittedAnswer));
+        $('#attempt-input').val(res.inputData);
+        $('#answer').val('');
+    }
 
     function restoreLastSolution() {
         var obj = null;

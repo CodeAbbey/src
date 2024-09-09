@@ -97,7 +97,7 @@
 <input type="hidden" name="taskid" value="<?= $model->task->id ?>"/>
 
 <div><span class="strong">Test data:</span> <span class="hint">copy and paste them as an input for your program</span></div>
-<div><textarea id="test-data" class="form-control" style="height:170px"><?= $model->testData ?></textarea></div><br/>
+<div><textarea id="test-data" class="form-control" style="height:170px"></textarea></div><br/>
 
 <div><span class="strong">Your answer:</span> <span class="hint">paste here an answer from your program</span></div>
 <div><input id="answer" name="answer" type="text" value="" class="form-control"/></div><br/>
@@ -122,23 +122,9 @@
 </div>
 </form>
 
-<!--sandbox errors modal-->
-<div class="modal fade" id="errorsModal" tabindex="-1" role="dialog"
-    aria-labelledby="errorTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="errorTitle">
-                    <span class="strong">Errors happened!</span>
-                    <a href="#" class="float-right"
-                        data-dismiss="modal">(close)</a></h5>
-            </div>
-            <div class="modal-body"
-                style="font-family:courier,monospace;white-space:pre-wrap;">
-            </div>
-        </div>
-    </div>
-</div>
+<?= $ctx->util->fragment('taskview_badattempt') ?>
+
+<?= $ctx->util->fragment('taskview_errorsmodal') ?>
 
 <?php endif; ?>
 <br/>

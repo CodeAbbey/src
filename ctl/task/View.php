@@ -53,8 +53,6 @@ if ($ctx->auth->user()) {
 
     $model->languages = $ctx->langService->languagesArray();
 
-    $model->testData = $ctx->taskService->prepareData($model->task->id);
-
     if ($model->task->author == $user->url) {
         $model->checkerCode = str_replace('<?php', '', $ctx->taskService->loadChecker($model->task->id));
     }

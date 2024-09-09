@@ -5,12 +5,16 @@ if (!$ctx->auth->user()) {
     return;
 }
 
+$ctx->util->plainOutput('');
 
-$taskid = $ctx->util->paramPost('taskid');
-$answer = $ctx->util->paramPost('answer');
-$solution = $ctx->util->paramPost('solution');
-$lang = $ctx->util->paramPost('lang');
-if ($ctx->util->paramPost('b64enc') == '1') {
+$inputPlain = file_get_contents('php://input');
+$input = json_decode($inputPlain);
+
+$taskid = $input->taskid;
+$answer = $input->answer;
+$solution = $input->solution;
+$lang = $input->lang;
+if ($input->b64enc ?? 0) {
     if ($solution[0] == '-') {
         $solution = strrev(substr($solution, 1));
     }
@@ -19,8 +23,7 @@ if ($ctx->util->paramPost('b64enc') == '1') {
 }
 
 if (!is_numeric($taskid) || !$solution || !$answer) {
-    $ctx->util->changePage('message');
-    $model->msg = 'Insufficient data A';
+    echo json_encode(['msg'=>'Insufficient data A', 'data'=>$inputPlain]);
     return;
 }
 
@@ -30,8 +33,7 @@ if ($lastSolved) {
     $last = array_map('intval', explode(' ', $lastSolved));
     $secRem = ($last[0] == $taskid ? $last[2] : max($last[2], $last[1])) - time();
     if ($secRem > 0) {
-        $ctx->util->changePage('message');
-        $model->msg = "You could not submit new tasks for $secRem seconds more";
+        echo json_encode(['msg'=>"You could not submit new tasks for $secRem seconds more"]);
         return;
     }
 }
@@ -42,8 +44,7 @@ $lang = isset($languages[$lang]) ? $languages[$lang] : "";
 $task = $ctx->tasksDao->findFirst("id = $taskid");
 
 if (!is_object($task)) {
-    $ctx->util->changePage('message');
-    $model->msg = 'Unknown task';
+    echo json_encode(['msg'=>'Unknown task']);
     return;
 }
 
@@ -51,26 +52,26 @@ $userid = $ctx->auth->loggedUser();
 $userData = $ctx->userDataDao->findFirst("userid = $userid");
 
 if ($ctx->cheatService->isSuspended($userid)) {
-    $ctx->util->changePage('message');
-    $model->msg = 'Submission not accepted from this account';
+    echo json_encode(['msg'=>'Submission not accepted from this account']);
     return;
 }
 
 $ctx->util->sessionPut('last_subm', time());
 
 $res = $ctx->taskService->processSolution($task, $userid, $answer, $solution, $lang);
-$model->solved = $res[0];
-$model->gainedPoints = number_format($res[1], 2);
-$model->userPoints = number_format($res[2], 2);
-$model->task = $task;
+$json = new \stdClass();
+$json->solved = $res[0];
+$json->gainedPoints = number_format($res[1], 2);
+$json->userPoints = number_format($res[2], 2);
+$json->task = $task;
 
 if ($res[1] > 0 && !$ctx->elems->conf->calcPointsSecret) {
     $ctx->miscService->calcPoints();
 }
 
 $rndPrimes = array(13, 17, 19, 23, 29, 31, 37);
-$model->userRnd = $rndPrimes[$userid % count($rndPrimes)];
-$model->numSolved = $userData->solved;
+$json->userRnd = $rndPrimes[$userid % count($rndPrimes)];
+$json->numSolved = $userData->solved;
 
 $expectedAnswer = $ctx->taskService->deleteAnswer($taskid);
 if (strlen($expectedAnswer) > 2) {
@@ -80,40 +81,26 @@ if (strlen($expectedAnswer) > 2) {
     }
 }
 
-if ($model->solved) {
+if ($json->solved) {
     if ($ctx->challengeService->challengeExists($taskid)) {
-        $model->challengeResult = explode(' ', $expectedAnswer, 3);
-    }
-    $model->answer = '';
-    $model->notes = $ctx->taskService->loadNotes($taskid);
-    $model->nextTasks = $ctx->tasksDao->find(
-        "solved < {$task->solved} order by solved desc", 5);
-    if (count($model->nextTasks) > 3) {
-        $model->nextTasks = array_slice($model->nextTasks, rand(0, 2), 3);
-    }
-    $recom = $ctx->miscService->getTaggedValue("recom-$taskid");
-    if ($recom) {
-        $recom = str_replace(' ', ',', $recom);
-        $recomTasks = $ctx->tasksDao->find("id in ($recom)");
-        array_splice($model->nextTasks, 0, 0, $recomTasks);
+        $json->challengeResult = explode(' ', $expectedAnswer, 3);
     }
 } else {
-    $model->answer = $expectedAnswer;
-    $model->submittedAnswer = base64_encode($answer);
-    $model->inputData = $ctx->taskService->deleteInputData($taskid);
-    $model->editorial = '';
+    $json->answer = $expectedAnswer;
+    $json->submittedAnswer = base64_encode($answer);
+    $json->inputData = $ctx->taskService->deleteInputData($taskid);
 }
 
 $url = url('task_view', 'param', $task->url);
-$msg = $model->solved
+$msg = $json->solved
         ? "I'm proud to tell I've just solved [{$task->title}]($url)!"
         : "I'm sorry to say I've failed [{$task->title}]($url)... :(";
 $ctx->miscService->postToMessHall($userid, $msg);
-$ctx->miscService->logAction($userid, ($model->solved ? 'solved' : 'failed') . " {$task->id}");
+$ctx->miscService->logAction($userid, ($json->solved ? 'solved' : 'failed') . " {$task->id}");
 
-if ($model->solved && $model->gainedPoints > 0) {
+if ($json->solved && $json->gainedPoints > 0) {
     $nowSolved = $userData->solved + 1; //we haven't reloaded UD after update
-    $model->numSolved = $nowSolved;
+    $json->numSolved = $nowSolved;
     $rank = $ctx->userService->rankAsNumber($nowSolved);
     $rankOld = $ctx->userService->rankAsNumber($userData->solved);
     if ($rank != $rankOld) {
@@ -124,3 +111,4 @@ if ($model->solved && $model->gainedPoints > 0) {
     }
 }
 
+echo json_encode($json);
