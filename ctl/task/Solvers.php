@@ -3,7 +3,8 @@
 $taskurl = $ctx->util->paramGet('param');
 $language = $ctx->util->paramGet('lang');
 
-if (!$ctx->miscService->validUrlParam($taskurl)) {
+if (!$ctx->miscService->validUrlParam($taskurl)
+    || (!empty($language) && !array_key_exists($language, $ctx->elems->conf->languages))) {
     $ctx->util->changePage('error404');
     return;
 }
