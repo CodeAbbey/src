@@ -79,11 +79,13 @@ class UserService extends \stdClass {
     }
 
     function checkPassword($password, $password2) {
-        if (strlen($password) < 8 || strlen($password) > 31) {
+        if (strlen($password) < 8) {
             return "Bad password Length";
         }
-        if (preg_match('/^[a-z\d]+$/i', $password) !== 1
-                || preg_match('/[a-z]/i', $password) !== 1 || preg_match('/\d/', $password) !== 1) {
+        $regexp = '/^[a-z\d\-\_\.]+$/i';
+        if (preg_match($regexp, $password) !== 1
+                || preg_match($regexp, $password) !== 1
+                || preg_match('/\d/', $password) !== 1) {
             return "password should contain Letters and Digits";
         }
         if ($password !== $password2) {

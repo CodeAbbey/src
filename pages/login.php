@@ -30,7 +30,8 @@
             *
             <span id="pwdltr">Latin letters and digits</span>
             <span id="pwddig">(at least one of both)</span>
-            <span id="pwdlen">from 8 to 31 characters</span> (i.e. "bzfra3jop")
+            <span id="pwdlen">8 characters or longer</span>
+            (i.e. "bzfra3jop", dashes, dots and underscores are OK)
         </span>
     </div>
     <div class="row">
@@ -97,8 +98,8 @@ function pwdVerify() {
     var inp = $('input[name=password]');
     var val = inp.val();
     var len = val.length;
-    hilightTri($('#pwdlen'), len > 0 ? (len > 7 && len < 32) : null);
-    hilightTri($('#pwdltr'), len > 0 ? /^[A-Z0-9]+$/i.test(val) : null);
+    hilightTri($('#pwdlen'), len > 0 ? (len > 7) : null);
+    hilightTri($('#pwdltr'), len > 0 ? /^[A-Z0-9\-\_\.]+$/i.test(val) : null);
     hilightTri($('#pwddig'), len > 0 ? /[A-Z]/i.test(val) && /\d/.test(val) : null);
 }
 
