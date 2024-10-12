@@ -1,10 +1,18 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Content-Type: text/plain');
+    if (!($_ENV['CA_TEST'] ?? false)) {
+        echo 'Oh, you are clever, but this should work only in test setup :)';
+        return;
+    }
     $output = [];
     $code = -1;
-    $input = file_get_contents('php://input');
-    exec("echo -n '$input' | base64 --decode | mariadb -B 2>&1", $output, $code);
+    $input = base64_decode(file_get_contents('php://input'));
+    if ($input === false) return;
+    $tmpname = @tempnam('.', 'sqlinput');
+    file_put_contents($tmpname, $input);
+    exec("mariadb -B < $tmpname 2>&1", $output, $code);
+    unlink($tmpname);
     echo 'Result: ' . ($code === 0 ? 'OK' : "Fail ($code)") . "\n";
     $output = trim(implode("\n", $output));
     echo $output ? $output : '(no output)';
