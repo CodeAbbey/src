@@ -123,9 +123,7 @@ $(function() {
                 alert('You need to submit source code for this task');
                 return false;
             }
-            if (answer == '') {
-                $("#answer").val(' ');
-            }
+            if (answer == '') answer = ' ';
         } else {
             if (answer == '' || src == '') {
                 alert('You are to enter both answer and solution source code');
@@ -296,6 +294,13 @@ $(function() {
         }
         inputHolder = null;
     };
+
+    $('.star').click((e) => {
+        e.stopPropagation();
+        var v = /star\-0/.test(e.target.className) ? '1' : '0';
+        $.post('/index/task_star', 'task=' + taskid + '&star=' + v, 
+            () => { $('.star').toggleClass('hidden'); });
+    });
 
 });
 

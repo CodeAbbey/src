@@ -1,6 +1,13 @@
 <div class="row advheader wiki-header">
 <div class="col-md-7">
-<h1><?= $model->task->title ?></h1>
+<h1><?= $model->task->title ?>
+    <?php if (isset($model->starred)) : ?>
+    <span class="star star-1 <?=$model->starred?'':'hidden'?>" 
+        title="click to remove bookmark">&#x2605;</span>
+    <span class="star star-0 <?=$model->starred?'hidden':''?>" 
+        title="click to bookmark">&#x2730;</span>
+    <?php endif; ?>
+</h1>
 <?php if ($ctx->auth->admin()) : ?>
     <p>
         <a href="<?= url('task_edit', 'id', $model->task->id) ?>">Edit</a>
@@ -21,6 +28,11 @@
 <?php endif; ?>
 
 <p class="strong">Problem #<?= $model->task->id ?>
+    &nbsp;
+    <span class="hidden">
+        &#x2730; - <span class="hint">click to bookmark</span>
+        &#x2605; - in your bookmarks</span>
+    </span>
     <br/><br/>Tags:
     <?php foreach ($model->tags as $tag) : ?>
         <a class="tag" href="<?= url('task_list', 'param', $tag) ?>"><?= $tag ?></a>
@@ -129,5 +141,3 @@
 <?php endif; ?>
 <br/>
 <div class="lastmod hidden"><?= $model->task->lastmod ?></div>
-
-

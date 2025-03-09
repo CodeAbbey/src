@@ -64,6 +64,24 @@ if ($model->isUser) {
             $userTasks[$taskId] = $taskRecord;
         }
     }
+    $starred = $ctx->miscService->getTaggedValue("star.$userid");
+    if ($starred) {
+        $starred = array_fill_keys(explode(',', $starred), 1);
+        foreach ($tasks as &$task)
+            if (isset($starred['' . $task->id]))
+                $task->starred = 1;
+        if ($sort[0] == 'tre') {
+            $tasks1 = [];
+            $tasks2 = [];
+            foreach ($tasks as &$task) {
+                if ($task->starred)
+                    $tasks1[] = $task;
+                else
+                    $tasks2[] = $task;
+            }
+            $tasks = array_merge($tasks1, $tasks2);
+        }
+    }
 }
 
 $translations = $ctx->miscService->getTaggedValues('tran-');

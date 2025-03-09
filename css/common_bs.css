@@ -575,6 +575,14 @@ pre code {
     padding-left: 36px;
 }
 
+.star {
+    cursor: pointer;
+}
+.star-1 {
+    color: gold;
+    -webkit-text-stroke: 2px orange;
+}
+
 #wdgt_ft {
     display:none;
 }

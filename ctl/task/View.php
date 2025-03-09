@@ -57,6 +57,10 @@ if ($ctx->auth->user()) {
         $model->checkerCode = str_replace('<?php', '', $ctx->taskService->loadChecker($model->task->id));
     }
 
+    $starred = $ctx->miscService->getTaggedValue("star.{$user->id}");
+    $model->starred = $starred
+        ? in_array($model->task->id, explode(',', $starred)) : false;
+
     $ctx->elems->scripts[] = 'task/_view';
     $ctx->elems->scripts[] = '_ace/ace';
     $ctx->elems->scripts[] = '_sql/sql-wasm';

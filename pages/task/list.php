@@ -40,7 +40,7 @@ Already solved ones are at the bottom of the table.<br/>
     </div>
     <div class="col-sm-3 col-sm-offset-1 row">
         <select id="task-sorter" class="form-control" data-sort="<?= $model->sort ?>">
-            <option value="tre1">Trending</option>
+            <option value="tre1">Trending and Bookmarked</option>
             <option value="num1">Sort by Num of Solvers</option>
             <option value="id1">Sort by Creation Order</option>
             <option value="num0">by Solvers (with solved)</option>
@@ -81,6 +81,7 @@ foreach ($model->tasks as $task) {
         $solved = '<a href="' . url('task_solvers', 'param', $task->shortUrl) . "\">$solved - view</a>";
     }
     $isc1 = isset($model->c1ids[$task->id]) ? 'class="strong"' : '';
+    if (isset($task->starred)) $isc1 .= ' style="background:gold"';
     echo "<tr><td $isc1>{$task->id}</td><td><a href=\"{$task->url}\">{$task->title}</a>$editLink</td>";
     echo "<td>{$task->translations}</td>";
     echo "<td class=\"hidden-xs\">$authorLink</td>";
