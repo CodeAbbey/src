@@ -25,7 +25,7 @@ if ($checkName !== null) {
     return;
 }
 
-if ($ctx->cheatService->isSuspended($user->id)) {
+if (!$ctx->cheatService->isSuspended($user->id)) {
     $user->username = $newname;
     $ctx->usersDao->save($user);
 }
